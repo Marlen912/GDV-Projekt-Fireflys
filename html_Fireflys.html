@@ -276,11 +276,11 @@
                                         mesh.add(color);
                                         mesh.add(changeColor);
                                         
-                                        for(var i=0;i<500;i++){
+                                        for(var i=0;i<100;i++){
                                         var meshClone = mesh.clone();
-                                        meshClone.position.x = Math.floor( Math.random() * 20 - 10 ) * 20;
+                                        meshClone.position.x = Math.floor( Math.random() * 20  ) * 20;
 					meshClone.position.y = Math.floor( Math.random() * 20 ) * 20 + 10;
-					meshClone.position.z = Math.floor( Math.random() * 20 - 10 ) * 20;
+					meshClone.position.z = Math.floor( Math.random() * 20  ) * 20;
                                         
                                         
                                         objects.push( meshClone );
@@ -316,6 +316,7 @@
 
 				requestAnimationFrame( animate );
                                 
+                                              
                                                                         
 				if ( controlsEnabled ) {
 					raycaster.ray.origin.copy( controls.getObject().position );
@@ -356,22 +357,33 @@
 						canJump = true;
 
 					}
-                                        
-                                               for(var i=0;i<500;i++){ 
+                                            
                                                                          
-                                               if(controls.getObject().position.x > (objects[i].position.x + 20))
-                                                {
-                                               document.addEventListener('keydown',changeColor);  
-                                                }}
-                                        
-                                        
+                                
                                              var char = controls.getObject();
                                              xAchse = Math.round(char.position.x);
                                              yAchse = Math.round(char.position.y);
                                              zAchse = Math.round(char.position.z);
+                                             OXAchse = Math.round(objects[0].position.x);
+                                             OZAchse = Math.round(objects[0].position.z);
       
-                                             str = "Current Position: x:" + xAchse + " y:" + yAchse + " z:" + zAchse;
+                                             str = "Current Position: x:" + xAchse + " y:" + yAchse + " z:" + zAchse + " Object: x:" + OXAchse +" z:" + OZAchse;
                                              document.getElementById("position").innerHTML =  str;
+                                             
+                                             for(var i=0;i<objects.length;i++)
+                                             {
+                                                var nearX = (controls.getObject().position.x < (objects[i].position.x+ 20)) && (controls.getObject().position.x > (objects[i].position.x-20));
+                                                var nearZ = (controls.getObject().position.z < (objects[i].position.z+ 20)) && (controls.getObject().position.z > (objects[i].position.z-20));
+                                                
+                                                if(nearX === true || nearZ === true )
+                                                {
+                                                    document.addEventListener('keydown',changeColor);  
+                                                }
+                                                else
+                                                {
+                                                    document.removeEventListener('keydown',changeColor);
+                                                }
+                                            }
                                             
 					prevTime = time;
                                         
