@@ -35,7 +35,7 @@
 			var controls;
                         var changeColor;
 			var objects = [];
-
+                        var meshClone;
 			var raycaster;
 
 			
@@ -249,7 +249,7 @@
 
 					material = new THREE.MeshPhongMaterial( { specular: 0xffffff, shading: THREE.FlatShading, vertexColors: THREE.VertexColors } );
 
-					var mesh = new THREE.Mesh( geometry, material );
+					 mesh = new THREE.Mesh( geometry, material );
                                         
 					material.color.setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
                                         
@@ -275,19 +275,20 @@
 					mesh.add(Color);
                                         mesh.add(color);
                                         mesh.add(changeColor);
-                                        
-                                        for(var i=0;i<100;i++){
-                                        var meshClone = mesh.clone();
+                                                
+                                                                                      
+                                        for(var i=0;i<4;i++){
+                                        meshClone = mesh.clone();
                                         meshClone.position.x = Math.floor( Math.random() * 20  ) * 20;
-					meshClone.position.y = Math.floor( Math.random() * 20 ) * 20 + 10;
+				//	meshClone.position.y = Math.floor( Math.random() * 20 ) * 20 + 10;
 					meshClone.position.z = Math.floor( Math.random() * 20  ) * 20;
                                         
-                                        
+                                                                                 
                                         objects.push( meshClone );
                                         scene.add( meshClone );
                                         
                                         }
-                                        
+                                                                            
                                      
 				renderer = new THREE.WebGLRenderer();
 				renderer.setClearColor( 0x0fffffff );
@@ -370,12 +371,14 @@
                                              str = "Current Position: x:" + xAchse + " y:" + yAchse + " z:" + zAchse + " Object: x:" + OXAchse +" z:" + OZAchse;
                                              document.getElementById("position").innerHTML =  str;
                                              
-                                             for(var i=0;i<objects.length;i++)
-                                             {
-                                                var nearX = (controls.getObject().position.x < (objects[i].position.x+ 20)) && (controls.getObject().position.x > (objects[i].position.x-20));
-                                                var nearZ = (controls.getObject().position.z < (objects[i].position.z+ 20)) && (controls.getObject().position.z > (objects[i].position.z-20));
+                                             
+                                                var nearX = (controls.getObject().position.x < (mesh.position.x + 50)) && (controls.getObject().position.x > (mesh.position.x- 50));
+                                                var nearZ = (controls.getObject().position.z < (mesh.position.z + 50)) && (controls.getObject().position.z > (mesh.position.z- 50));
                                                 
-                                                if(nearX === true || nearZ === true )
+                                                var nearCloneX = (controls.getObject().position.x < (meshClone.position.x+ 50)) && (controls.getObject().position.x > (meshClone.position.x- 50));
+                                                var nearCloneZ = (controls.getObject().position.z < (meshClone.position.z+ 50)) && (controls.getObject().position.z > (meshClone.position.z- 50));
+                                                
+                                                if((nearX === true && nearZ === true)||(nearCloneX === true && nearCloneZ === true) )
                                                 {
                                                     document.addEventListener('keydown',changeColor);  
                                                 }
@@ -383,8 +386,8 @@
                                                 {
                                                     document.removeEventListener('keydown',changeColor);
                                                 }
-                                            }
-                                            
+                                             
+                                                 
 					prevTime = time;
                                         
 				}
