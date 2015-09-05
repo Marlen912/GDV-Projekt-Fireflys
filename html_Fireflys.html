@@ -26,6 +26,7 @@
 		<div id="position">
                 <span >Current Position: </span>
                 </div>  
+                
                               
 		<script>
                 /* global THREE */
@@ -95,6 +96,8 @@
 
 						element.requestFullscreen();
                                                 element.requestPointerLock();
+                                                
+                                                
 
 					} else {
 
@@ -126,7 +129,7 @@
                        
 
 			function init() {
-
+                                
 				camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
 
 				scene = new THREE.Scene();
@@ -232,9 +235,9 @@
                              
 				scene.add( mesh );
 
-				// objects
+				// Trees
 
-				geometry = new THREE.BoxGeometry( 20, 20, 20 );
+				geometry = new THREE.BoxGeometry( 10, 50, 10 );
 
 				for ( var i = 0, l = geometry.faces.length; i < l; i ++ ) {
 
@@ -249,7 +252,7 @@
 
 					material = new THREE.MeshPhongMaterial( { specular: 0xffffff, shading: THREE.FlatShading, vertexColors: THREE.VertexColors } );
 
-					 mesh = new THREE.Mesh( geometry, material );
+					var mesh = new THREE.Mesh( geometry, material );
                                         
 					material.color.setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
                                         
@@ -276,19 +279,18 @@
                                         mesh.add(color);
                                         mesh.add(changeColor);
                                                 
-                                                                                      
-                                        for(var i=0;i<4;i++){
+                                                                                   
+                                        for(var i=0;i<200;i++){
                                         meshClone = mesh.clone();
-                                        meshClone.position.x = Math.floor( Math.random() * 20  ) * 20;
-				//	meshClone.position.y = Math.floor( Math.random() * 20 ) * 20 + 10;
-					meshClone.position.z = Math.floor( Math.random() * 20  ) * 20;
+                                        objects.push( meshClone );}
                                         
-                                                                                 
-                                        objects.push( meshClone );
-                                        scene.add( meshClone );
-                                        
+
+                                        for(var i=0;i<objects.length;i++){
+                                        objects[i].position.x = Math.floor( Math.random() * 20 - 10 ) * 20;
+                                        objects[i].position.z = Math.floor( Math.random() * 20 - 10 ) * 20;
+                                        scene.add(objects[i]);
                                         }
-                                                                            
+                                                                                                                            
                                      
 				renderer = new THREE.WebGLRenderer();
 				renderer.setClearColor( 0x0fffffff );
@@ -316,7 +318,6 @@
 			function animate() {
 
 				requestAnimationFrame( animate );
-                                
                                               
                                                                         
 				if ( controlsEnabled ) {
@@ -365,20 +366,18 @@
                                              xAchse = Math.round(char.position.x);
                                              yAchse = Math.round(char.position.y);
                                              zAchse = Math.round(char.position.z);
-                                             OXAchse = Math.round(objects[0].position.x);
-                                             OZAchse = Math.round(objects[0].position.z);
+                                             OXAchse = Math.round(objects[4].position.x);
+                                             OZAchse = Math.round(objects[4].position.z);
       
                                              str = "Current Position: x:" + xAchse + " y:" + yAchse + " z:" + zAchse + " Object: x:" + OXAchse +" z:" + OZAchse;
                                              document.getElementById("position").innerHTML =  str;
                                              
                                              
-                                                var nearX = (controls.getObject().position.x < (mesh.position.x + 50)) && (controls.getObject().position.x > (mesh.position.x- 50));
-                                                var nearZ = (controls.getObject().position.z < (mesh.position.z + 50)) && (controls.getObject().position.z > (mesh.position.z- 50));
-                                                
-                                                var nearCloneX = (controls.getObject().position.x < (meshClone.position.x+ 50)) && (controls.getObject().position.x > (meshClone.position.x- 50));
-                                                var nearCloneZ = (controls.getObject().position.z < (meshClone.position.z+ 50)) && (controls.getObject().position.z > (meshClone.position.z- 50));
-                                                
-                                                if((nearX === true && nearZ === true)||(nearCloneX === true && nearCloneZ === true) )
+                                                for(var i = 0;i<objects.length;i++){                                                
+                                                var nearCloneX = (controls.getObject().position.x < (objects[i].position.x+ 50)) && (controls.getObject().position.x > (objects[i].position.x- 50));
+                                                var nearCloneZ = (controls.getObject().position.z < (objects[i].position.z+ 50)) && (controls.getObject().position.z > (objects[i].position.z- 50));
+                                                }
+                                                if(nearCloneX === true && nearCloneZ === true)                                                 
                                                 {
                                                     document.addEventListener('keydown',changeColor);  
                                                 }
