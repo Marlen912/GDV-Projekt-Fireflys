@@ -15,7 +15,8 @@
 				overflow: hidden;
 				font-family: arial;
 			}
-			
+                        
+		
 
 		</style>
 	</head>
@@ -27,7 +28,11 @@
                 <span >Current Position: </span>
                 </div>  
                 
-                              
+
+			<div id="instructions">
+				<span> W, A, S, D = Move, SPACE = Jump, MOUSE = Look around,E = Activate </span>
+                        </div>	
+				                              
 		<script>
                 /* global THREE */
                 /* global EventDispatcher */
@@ -282,14 +287,14 @@
                                                                                    
                                         for(var i=0;i<200;i++){
                                         meshClone = mesh.clone();
-                                        objects.push( meshClone );}
+                                        meshClone.position.x = Math.floor( Math.random() * 20 - 10 ) * 20;
+                                        meshClone.position.z = Math.floor( Math.random() * 20 - 10 ) * 20;
+                                        scene.add(meshClone);
+                                        objects.push( meshClone );
+                                        }
                                         
 
-                                        for(var i=0;i<objects.length;i++){
-                                        objects[i].position.x = Math.floor( Math.random() * 20 - 10 ) * 20;
-                                        objects[i].position.z = Math.floor( Math.random() * 20 - 10 ) * 20;
-                                        scene.add(objects[i]);
-                                        }
+                                       
                                                                                                                             
                                      
 				renderer = new THREE.WebGLRenderer();
@@ -366,18 +371,19 @@
                                              xAchse = Math.round(char.position.x);
                                              yAchse = Math.round(char.position.y);
                                              zAchse = Math.round(char.position.z);
-                                             OXAchse = Math.round(objects[4].position.x);
-                                             OZAchse = Math.round(objects[4].position.z);
+                                             OXAchse = Math.round(objects[objects.length-1].position.x);
+                                             OZAchse = Math.round(objects[objects.length-1].position.z);
       
                                              str = "Current Position: x:" + xAchse + " y:" + yAchse + " z:" + zAchse + " Object: x:" + OXAchse +" z:" + OZAchse;
                                              document.getElementById("position").innerHTML =  str;
                                              
                                              
-                                                for(var i = 0;i<objects.length;i++){                                                
-                                                var nearCloneX = (controls.getObject().position.x < (objects[i].position.x+ 50)) && (controls.getObject().position.x > (objects[i].position.x- 50));
-                                                var nearCloneZ = (controls.getObject().position.z < (objects[i].position.z+ 50)) && (controls.getObject().position.z > (objects[i].position.z- 50));
-                                                }
-                                                if(nearCloneX === true && nearCloneZ === true)                                                 
+                                            
+                                                
+                                                var nearCloneX = (controls.getObject().position.x < (meshClone.position.x+ 50)) && (controls.getObject().position.x > (meshClone.position.x- 50));
+                                                var nearCloneZ = (controls.getObject().position.z < (meshClone.position.z+ 50)) && (controls.getObject().position.z > (meshClone.position.z- 50));
+                                                
+                                                 if(nearCloneX === true && nearCloneZ === true)                                                 
                                                 {
                                                     document.addEventListener('keydown',changeColor);  
                                                 }
@@ -385,11 +391,13 @@
                                                 {
                                                     document.removeEventListener('keydown',changeColor);
                                                 }
-                                             
+                                                
                                                  
-					prevTime = time;
+                                             
+                                              					prevTime = time;
                                         
 				}
+                                 
                                 
 				renderer.render( scene, camera );
                                
