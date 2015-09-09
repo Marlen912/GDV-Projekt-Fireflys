@@ -24,6 +24,7 @@
 		<script src="http://threejs.org/build/three.min.js"></script>
 		<script src="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/js/controls/PointerLockControls.js"></script>
                 <script src="https://raw.githubusercontent.com/mrdoob/eventdispatcher.js/master/src/EventDispatcher.js"></script>
+                <script src='https://raw.githubusercontent.com/jeromeetienne/threex.grassground/master/threex.grassground.js'></script>
 		<div id="position">
                 <span >Current Position: </span>
                 </div>  
@@ -36,11 +37,13 @@
 		<script>
                 /* global THREE */
                 /* global EventDispatcher */
+                /* global THREEx */
 			var camera, scene, renderer;
 			var geometry, material, mesh;
 			var controls;
                         var changeColor;
 			var objects = [];
+                        var sphere;
                         var meshClone;
 			var raycaster;
 
@@ -124,7 +127,7 @@
                         
 
 			var controlsEnabled = false;
-                        
+                        var colorStatus = true;
 			var moveForward = false;
 			var moveBackward = false;
 			var moveLeft = false;
@@ -213,58 +216,69 @@
 				raycaster = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, - 1, 0 ), 0,10);
 
 				// floor
-
-				geometry = new THREE.PlaneGeometry( 2000, 2000, 100,100);
+                                geometry = new THREE.PlaneGeometry( 2000, 2000, 100,100);
 				geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
-
-				for ( var i = 0, l = geometry.vertices.length; i < l; i ++ ) {
+                                for ( var i = 0, l = geometry.vertices.length; i < l; i ++ ) {
 
 					var vertex = geometry.vertices[ i ];
 					vertex.x += Math.random() * 20 - 10;
 					vertex.z += Math.random() * 20 - 10;
 
 				}
-
+                                var texture = new THREE.ImageUtils.loadTexture( 'grasslight.jpg' );
 				for ( var i = 0, l = geometry.faces.length; i < l; i ++ ) {
 
 					var face = geometry.faces[ i ];
-					face.vertexColors[ 0 ] = new THREE.Color().setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-					face.vertexColors[ 1 ] = new THREE.Color().setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-					face.vertexColors[ 2 ] = new THREE.Color().setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
+					face.vertexColors[ 0 ] = new THREE.Color(texture );
+					face.vertexColors[ 1 ] = new THREE.Color(texture);
+					face.vertexColors[ 2 ] = new THREE.Color(texture );
                                        
 				}
+                                
+                                material = new THREE.MeshBasicMaterial( { map : texture } );
 
-				material = new THREE.MeshBasicMaterial( { vertexColors: THREE.VertexColors } );
 
-				mesh = new THREE.Mesh( geometry, material );
+				mesh = new THREE.Mesh( geometry, material);
                              
 				scene.add( mesh );
+                                
+                                  //object sphere      
+                                 geometry = new THREE.SphereGeometry( 10, 20, 10 );
+                                 material = new THREE.MeshBasicMaterial({color:0xFF00FF});
+                                 sphere = new THREE.Mesh(geometry,material);
+                                 sphere.position.x = 20;
+                                 sphere.position.z = 0;
+                                 sphere.position.y = 5;
+                                 scene.add(sphere);
+                                 objects.push(sphere);
 
-				// Trees
+				// Objects Trees
 
 				geometry = new THREE.BoxGeometry( 10, 50, 10 );
 
 				for ( var i = 0, l = geometry.faces.length; i < l; i ++ ) {
 
 					var face = geometry.faces[ i ];
-					face.vertexColors[ 0 ] = new THREE.Color().setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-					face.vertexColors[ 1 ] = new THREE.Color().setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-					face.vertexColors[ 2 ] = new THREE.Color().setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
+					face.vertexColors[ 0 ] = new THREE.Color(0x8F4A1F);
+					face.vertexColors[ 1 ] = new THREE.Color(0xB85314);
+					face.vertexColors[ 2 ] = new THREE.Color(0xEC7429);
 
 				}
                                 
            				
 
-					material = new THREE.MeshPhongMaterial( { specular: 0xffffff, shading: THREE.FlatShading, vertexColors: THREE.VertexColors } );
+					material = new THREE.MeshPhongMaterial( { specular: 0xffffff, shading: THREE.FlatShading, vertexColors: THREE.VertexColors} );
 
 					var mesh = new THREE.Mesh( geometry, material );
                                         
 					material.color.setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
                                         
                                          var Color = function (){
-                                         this.change=function(){
-                                         this.dispatchEvent( { type: 'change', message: mesh.material.color.setHSL(0,0,0) } );
-                                        };};
+                                         this.changeTrue=function(){
+                                         this.dispatchEvent( { type: 'change', message: mesh.material.color.setHSL(0,0,0) } );};
+                                         this.changeFalse = function(){
+                                         this.dispatchEvent({type:'change',message: mesh.material.color.setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75 )});};
+                                        };
             
                                         EventDispatcher.prototype.apply( Color.prototype );
                                         // Using events
@@ -274,8 +288,18 @@
                                         switch(event.keyCode)
                                          {
                                              case 69:
-                                             color.change();
+                                             if (colorStatus === true)
+                                             {    
+                                             color.changeTrue();
+                                             colorStatus = false;
                                              break;
+                                             }
+                                            else
+                                            {
+                                              color.changeFalse();
+                                              colorStatus = true;
+                                              break;
+                                            }
                                          }
                                           };               
                                         
@@ -289,14 +313,18 @@
                                         meshClone = mesh.clone();
                                         meshClone.position.x = Math.floor( Math.random() * 20 - 10 ) * 20;
                                         meshClone.position.z = Math.floor( Math.random() * 20 - 10 ) * 20;
+                                        if((meshClone.position.x < (sphere.position.x+10)&& meshClone.position.x >(sphere.position.x-10))||(meshClone.position.z < (sphere.position.x+10)&& meshClone.position.z >(sphere.position.x-10)))
+                                        {
+                                        meshClone.position.x = Math.floor( Math.random() * 20 - 10 ) * 20;
+                                        meshClone.position.z = Math.floor( Math.random() * 20 - 10 ) * 20; 
+                                        }
+                                        meshClone.position.y = 25;
                                         scene.add(meshClone);
                                         objects.push( meshClone );
                                         }
                                         
 
-                                       
-                                                                                                                            
-                                     
+                                                                                                                                                           
 				renderer = new THREE.WebGLRenderer();
 				renderer.setClearColor( 0x0fffffff );
 				renderer.setPixelRatio( window.devicePixelRatio );
@@ -321,11 +349,14 @@
                         
                        
 			function animate() {
-
-				requestAnimationFrame( animate );
-                                              
-                                                                        
+                                
+                              
+		requestAnimationFrame( animate );
+		
+	                                                        
 				if ( controlsEnabled ) {
+                                    
+                                                                          
 					raycaster.ray.origin.copy( controls.getObject().position );
 					raycaster.ray.origin.y -= 10;
 
@@ -343,7 +374,6 @@
 
 					if ( moveForward ) velocity.z -= 500.0 * delta;
 					if ( moveBackward ) velocity.z += 500.0 * delta;
-
 					if ( moveLeft ) velocity.x -= 500.0 * delta;
 					if ( moveRight ) velocity.x += 500.0 * delta;
 
@@ -380,8 +410,8 @@
                                              
                                             
                                                 
-                                                var nearCloneX = (controls.getObject().position.x < (meshClone.position.x+ 50)) && (controls.getObject().position.x > (meshClone.position.x- 50));
-                                                var nearCloneZ = (controls.getObject().position.z < (meshClone.position.z+ 50)) && (controls.getObject().position.z > (meshClone.position.z- 50));
+                                                var nearCloneX = (controls.getObject().position.x < (sphere.position.x+ 50)) && (controls.getObject().position.x > (sphere.position.x- 50));
+                                                var nearCloneZ = (controls.getObject().position.z < (sphere.position.z+ 50)) && (controls.getObject().position.z > (sphere.position.z- 50));
                                                 
                                                  if(nearCloneX === true && nearCloneZ === true)                                                 
                                                 {
@@ -396,11 +426,13 @@
                                              
                                               					prevTime = time;
                                         
-				}
+				}  
                                  
                                 
 				renderer.render( scene, camera );
-                               
+                             
+                                
+                
 			}
                         
                          
