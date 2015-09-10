@@ -250,8 +250,7 @@
                                  sphere.position.z = 0;
                                  sphere.position.y = 5;
                                  scene.add(sphere);
-                                 objects.push(sphere);
-
+                                 
 				// Objects Trees
 
 				geometry = new THREE.BoxGeometry( 10, 50, 10 );
@@ -271,11 +270,11 @@
 
 					var mesh = new THREE.Mesh( geometry, material );
                                         
-					material.color.setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-                                        
+					
+                                        mesh.position.set(50,25,60);
                                          var Color = function (){
-                                         this.changeTrue=function(){
-                                         this.dispatchEvent( { type: 'change', message: mesh.material.color.setHSL(0,0,0) } );};
+                                         this.changeTrue=function(){ for(var i=0;i<objects.length;i++)
+                                         this.dispatchEvent({type:'change',message: objects[i].material.color.setHSL(0,0,0) + objects[i].translateX(15) });};
                                          this.changeFalse = function(){
                                          this.dispatchEvent({type:'change',message: mesh.material.color.setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75 )});};
                                         };
@@ -309,7 +308,7 @@
                                         mesh.add(changeColor);
                                                 
                                                                                    
-                                        for(var i=0;i<200;i++){
+                                        for(var i=0;i<100;i++){
                                         meshClone = mesh.clone();
                                         meshClone.position.x = Math.floor( Math.random() * 20 - 10 ) * 20;
                                         meshClone.position.z = Math.floor( Math.random() * 20 - 10 ) * 20;
