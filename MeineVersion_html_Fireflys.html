@@ -121,6 +121,8 @@
 				document.innerHTML = 'Your browser doesn\'t seem to support Pointer Lock API';
 
 			}
+                        
+                        
 
 			init();
 			animate();
@@ -142,13 +144,36 @@
 				camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
 
 				scene = new THREE.Scene();
+                                
+                                /*
 
 				var light = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 0.75 );
 				light.position.set( 0.5, 100, 0.75 );
 				scene.add( light );
+                               */
 
 				controls = new THREE.PointerLockControls( camera );
 				scene.add( controls.getObject() );
+        
+                                
+                             // white spotlight shining from the side, casting shadow
+
+                            var spotLight = new THREE.SpotLight( 0xffffff );
+                            spotLight.position.set( 20, 500, 50 );
+
+                            spotLight.castShadow = true;
+
+                            spotLight.shadowMapWidth = 1024;
+                            spotLight.shadowMapHeight = 1024;
+
+
+                            spotLight.shadowCameraNear = 500;
+                            spotLight.shadowCameraFar = 5000;
+                            spotLight.shadowCameraFov = 30;
+                            spotLight.shadowDarkness = 0.8;
+
+                            scene.add( spotLight );
+                            
 
 				var onKeyDown = function ( event ) {
 
@@ -252,6 +277,8 @@
                                  sphere.position.y = 5;
                                  scene.add(sphere);
                                  
+                                   
+                                 
 				// Objects Trees
 
 				geometry = new THREE.BoxGeometry( 10, 50, 10 );
@@ -323,7 +350,79 @@
                                         objects.push( meshClone );
                                         }
                                         
+ /*   1.Variante                                  // skybox
+                                         var path = "skybilder/";
+    var format = '.jpg';
+    var urls = [
+    path + 'purplenebula_front' + format, path + 'purplenebula_back' + format,
+    path + 'purplenebula_left' + format, path + 'purplenebula_right' + format,
+    path + 'purplenebula_top' + format, path + 'purplenebula_top' + format];
+    var textureCube = THREE.ImageUtils.loadTextureCube(urls);
+                                        
+    var shader = THREE.ShaderLib["cube"];
+    shader.uniforms["tCube"].value = textureCube;
+    var material = new THREE.ShaderMaterial({
+      fragmentShader: shader.fragmentShader,
+      vertexShader: shader.vertexShader,
+      uniforms: shader.uniforms,
+      depthWrite: false,
+      side: THREE.BackSide
+    });
 
+    var skybox = new THREE.Mesh(new THREE.CubeGeometry(100000, 100000, 100000), material);
+    scene.add(skybox);
+    */
+                                        
+                                        //skybox
+  /*   2.Variante
+                var imageURL = "skybilder/purplenebula_";
+                var position  = ["front", "back", "left", "right", "top", "top"];
+                var format = ".jpg";
+   
+                var materialArray = [];
+                for (var i = 0; i < 6; i++)
+                 materialArray.push( new THREE.MeshBasicMaterial({
+                   map: THREE.ImageUtils.loadTexture( imageURL + position[i] + format ),
+                   side: THREE.BackSide
+                 }));
+  
+                var skyGeometry = new THREE.BoxGeometry( 100000, 100000, 100000 );
+                var skyMaterial = new THREE.ShaderMaterial( materialArray );
+                var skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
+                skyBox.rotation.x += Math.PI / 2;
+                  
+                    // add it to the scene
+                    scene.add( skyBox );
+  */                                      
+                     
+   /* 3.Variante         
+       function loadSkyBox() {
+     
+        // Load the skybox images and create list of materials
+        var materials = [
+            createMaterial( 'skybilder/purplenebula_right.jpg' ), // right
+            createMaterial( 'skybilder/purplenebula_left.jpg' ), // left
+            createMaterial( 'skybilder/purplenebula_top.jpg' ), // top
+            createMaterial( 'skybilder/purplenebula_top.jpg' ), // bottom
+            createMaterial( 'skybilder/purplenebula_back.jpg' ), // back
+            createMaterial( 'skybilder/purplenebula_front.jpg' )  // front
+        ];
+         
+        // Create a large cube
+        var mesh = new THREE.Mesh( new THREE.BoxGeometry( 100, 100, 100, 1, 1, 1 ), new THREE.MeshFaceMaterial( materials ) );
+         
+        // Set the x scale to be -1, this will turn the cube inside out
+        mesh.scale.set(-1,1,1);
+        scene.add( mesh );  
+}
+ 
+function createMaterial( path ) {
+    var texture = THREE.ImageUtils.loadTexture(path);
+    var material = new THREE.MeshBasicMaterial( { map: texture, overdraw: 0.5 } );
+ 
+    return material; 
+}
+*/
                                                                                                                                                            
 				renderer = new THREE.WebGLRenderer();
 				renderer.setClearColor( 0x0fffffff );
@@ -376,56 +475,7 @@
 
 					velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
                                         
-                                        //skybox
-  /*   1.Variante
-                var imageURL = "skybilder/purplenebula_";
-                var position  = ["front", "back", "left", "right", "top", "top"];
-                var format = ".jpg";
-   
-                var materialArray = [];
-                for (var i = 0; i < 6; i++)
-                 materialArray.push( new THREE.MeshBasicMaterial({
-                   map: THREE.ImageUtils.loadTexture( imageURL + position[i] + format ),
-                   side: THREE.BackSide
-                 }));
-  
-                var skyGeometry = new THREE.BoxGeometry( 100000, 100000, 100000 );
-                var skyMaterial = new THREE.ShaderMaterial( materialArray );
-                var skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
-                skyBox.rotation.x += Math.PI / 2;
-                  
-                    // add it to the scene
-                    scene.add( skyBox );
-  */                                      
-                     
-   /* 2.Variante         
-       function loadSkyBox() {
-     
-        // Load the skybox images and create list of materials
-        var materials = [
-            createMaterial( 'skybilder/purplenebula_right.jpg' ), // right
-            createMaterial( 'skybilder/purplenebula_left.jpg' ), // left
-            createMaterial( 'skybilder/purplenebula_top.jpg' ), // top
-            createMaterial( 'skybilder/purplenebula_top.jpg' ), // bottom
-            createMaterial( 'skybilder/purplenebula_back.jpg' ), // back
-            createMaterial( 'skybilder/purplenebula_front.jpg' )  // front
-        ];
-         
-        // Create a large cube
-        var mesh = new THREE.Mesh( new THREE.BoxGeometry( 100, 100, 100, 1, 1, 1 ), new THREE.MeshFaceMaterial( materials ) );
-         
-        // Set the x scale to be -1, this will turn the cube inside out
-        mesh.scale.set(-1,1,1);
-        scene.add( mesh );  
-}
- 
-function createMaterial( path ) {
-    var texture = THREE.ImageUtils.loadTexture(path);
-    var material = new THREE.MeshBasicMaterial( { map: texture, overdraw: 0.5 } );
- 
-    return material; 
-}
-*/
+                                     
             
                                         
 
@@ -492,7 +542,7 @@ function createMaterial( path ) {
                 
 			}
                         
-                    /*  3. Variante
+                    /*  4. Variante
                     var urlPrefix = "B:\Studium\Skripte\4.Semester\GDV\Firefly\GDV-Projekt-Fireflys";
                     var urls = [ urlPrefix + "purplenebula_front.jpg", urlPrefix + "purplenebula_back.jpg",
                     urlPrefix + "purplenebula_left.jpg", urlPrefix + "purplenebula_right.jpg",
@@ -514,5 +564,6 @@ function createMaterial( path ) {
                 
    
 		</script>
+           
 	</body>
 </html>
