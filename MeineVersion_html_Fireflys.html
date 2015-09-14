@@ -25,14 +25,6 @@
 		<script src="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/js/controls/PointerLockControls.js"></script>
                 <script src="https://raw.githubusercontent.com/mrdoob/eventdispatcher.js/master/src/EventDispatcher.js"></script>
                 <script src='https://raw.githubusercontent.com/jeromeetienne/threex.grassground/master/threex.grassground.js'></script>
-                
-                <script src="js/controls/OrbitControls.js"></script>
-		<script src="js/Mirror.js"></script>
-		<script src="js/WaterShader.js"></script>
-
-		<script src="js/Detector.js"></script>
-		
-                <script src="js/libs/stats.min.js"></script>
 		<div id="position">
                 <span >Current Position: </span>
                 </div>  
@@ -142,6 +134,7 @@
 			var moveRight = false;
                         var prevTime = performance.now();
 			var velocity = new THREE.Vector3();
+                       
                        
 
 			function init() {
@@ -342,104 +335,10 @@
 				//
 
 				window.addEventListener( 'resize', onWindowResize, false );
-                                
-                                
-                                waterNormals = new THREE.ImageUtils.loadTexture( 'textures/waternormals.jpg' );
-				waterNormals.wrapS = waterNormals.wrapT = THREE.RepeatWrapping; 
-
-				water = new THREE.Water( renderer, camera, scene, {
-					textureWidth: 512, 
-					textureHeight: 512,
-					waterNormals: waterNormals,
-					alpha: 	1.0,
-					sunDirection: light.position.clone().normalize(),
-					sunColor: 0xffffff,
-					waterColor: 0x001e0f,
-					distortionScale: 50.0,
-				} );
-
-
-				mirrorMesh = new THREE.Mesh(
-					new THREE.PlaneBufferGeometry( parameters.width * 500, parameters.height * 500 ),
-					water.material
-				);
-
-				mirrorMesh.add( water );
-				mirrorMesh.rotation.x = - Math.PI * 0.5;
-				scene.add( mirrorMesh );
-
-
-				// load skybox
-
-				var cubeMap = new THREE.CubeTexture( [] );
-				cubeMap.format = THREE.RGBFormat;
-				cubeMap.flipY = false;
-
-				var loader = new THREE.ImageLoader();
-				loader.load( 'textures/skyboxsun25degtest.png', function ( image ) {
-
-					var getSide = function ( x, y ) {
-
-						var size = 1024;
-
-						var canvas = document.createElement( 'canvas' );
-						canvas.width = size;
-						canvas.height = size;
-
-						var context = canvas.getContext( '2d' );
-						context.drawImage( image, - x * size, - y * size );
-
-						return canvas;
-
-					};
-
-					cubeMap.images[ 0 ] = getSide( 2, 1 ); // px
-					cubeMap.images[ 1 ] = getSide( 0, 1 ); // nx
-					cubeMap.images[ 2 ] = getSide( 1, 0 ); // py
-					cubeMap.images[ 3 ] = getSide( 1, 2 ); // ny
-					cubeMap.images[ 4 ] = getSide( 1, 1 ); // pz
-					cubeMap.images[ 5 ] = getSide( 3, 1 ); // nz
-					cubeMap.needsUpdate = true;
-
-				} );
-
-				var cubeShader = THREE.ShaderLib['cube'];
-				cubeShader.uniforms['tCube'].value = cubeMap;
-
-				var skyBoxMaterial = new THREE.ShaderMaterial( {
-					fragmentShader: cubeShader.fragmentShader,
-					vertexShader: cubeShader.vertexShader,
-					uniforms: cubeShader.uniforms,
-					depthWrite: false,
-					side: THREE.BackSide
-				});
-
-				var skyBox = new THREE.Mesh(
-					new THREE.BoxGeometry( 1000000, 1000000, 1000000 ),
-					skyBoxMaterial
-				);
-				
-				scene.add( skyBox );
-
-
-				var geometry = new THREE.IcosahedronGeometry( 400, 4 );
-
-				for ( var i = 0, j = geometry.faces.length; i < j; i ++ ) {
-
-					geometry.faces[ i ].color.setHex( Math.random() * 0xffffff );
-
-				}
-
-				var material = new THREE.MeshPhongMaterial( {
-					vertexColors: THREE.FaceColors,
-					shininess: 100,
-					envMap: cubeMap
-				} );
-				
-				sphere = new THREE.Mesh( geometry, material );
-				scene.add( sphere );
 
 			}
+                        
+                        
 
 			function onWindowResize() {
 
@@ -459,6 +358,8 @@
 	                                                        
 				if ( controlsEnabled ) {
                                     
+                                    
+
                                                                           
 					raycaster.ray.origin.copy( controls.getObject().position );
 					raycaster.ray.origin.y -= 10;
@@ -474,6 +375,59 @@
 					velocity.z -= velocity.z * 10.0 * delta;
 
 					velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
+                                        
+                                        //skybox
+  /*   1.Variante
+                var imageURL = "skybilder/purplenebula_";
+                var position  = ["front", "back", "left", "right", "top", "top"];
+                var format = ".jpg";
+   
+                var materialArray = [];
+                for (var i = 0; i < 6; i++)
+                 materialArray.push( new THREE.MeshBasicMaterial({
+                   map: THREE.ImageUtils.loadTexture( imageURL + position[i] + format ),
+                   side: THREE.BackSide
+                 }));
+  
+                var skyGeometry = new THREE.BoxGeometry( 100000, 100000, 100000 );
+                var skyMaterial = new THREE.ShaderMaterial( materialArray );
+                var skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
+                skyBox.rotation.x += Math.PI / 2;
+                  
+                    // add it to the scene
+                    scene.add( skyBox );
+  */                                      
+                     
+   /* 2.Variante         
+       function loadSkyBox() {
+     
+        // Load the skybox images and create list of materials
+        var materials = [
+            createMaterial( 'skybilder/purplenebula_right.jpg' ), // right
+            createMaterial( 'skybilder/purplenebula_left.jpg' ), // left
+            createMaterial( 'skybilder/purplenebula_top.jpg' ), // top
+            createMaterial( 'skybilder/purplenebula_top.jpg' ), // bottom
+            createMaterial( 'skybilder/purplenebula_back.jpg' ), // back
+            createMaterial( 'skybilder/purplenebula_front.jpg' )  // front
+        ];
+         
+        // Create a large cube
+        var mesh = new THREE.Mesh( new THREE.BoxGeometry( 100, 100, 100, 1, 1, 1 ), new THREE.MeshFaceMaterial( materials ) );
+         
+        // Set the x scale to be -1, this will turn the cube inside out
+        mesh.scale.set(-1,1,1);
+        scene.add( mesh );  
+}
+ 
+function createMaterial( path ) {
+    var texture = THREE.ImageUtils.loadTexture(path);
+    var material = new THREE.MeshBasicMaterial( { map: texture, overdraw: 0.5 } );
+ 
+    return material; 
+}
+*/
+            
+                                        
 
 					if ( moveForward ) velocity.z -= 500.0 * delta;
 					if ( moveBackward ) velocity.z += 500.0 * delta;
@@ -532,42 +486,33 @@
 				}  
                                  
                                 
-			
+				renderer.render( scene, camera );
                              
                                 
                 
 			}
                         
-                         
-
-		function render() {
-
-				var time = performance.now() * 0.001;
-
-				sphere.position.y = Math.sin( time ) * 500 + 250;
-				sphere.rotation.x = time * 0.5;
-				sphere.rotation.z = time * 0.51;
-
-				water.material.uniforms.time.value += 1.0 / 60.0;
-				controls.update();
-				water.render();
-				renderer.render( scene, camera );
-
-			}
-
-			
-			
-			
-
-			}
-
-			}
-
-
-			}
-
+                    /*  3. Variante
+                    var urlPrefix = "B:\Studium\Skripte\4.Semester\GDV\Firefly\GDV-Projekt-Fireflys";
+                    var urls = [ urlPrefix + "purplenebula_front.jpg", urlPrefix + "purplenebula_back.jpg",
+                    urlPrefix + "purplenebula_left.jpg", urlPrefix + "purplenebula_right.jpg",
+                    urlPrefix + "purplenebula_top.jpg"];
+                    var textureCube = THREE.ImageUtils.loadTextureCube( urls );
+                    
+                    var shader = THREE.ShaderLib['cube'];
+                    var uniforms = THREE.UniformsUtils.clone( shader.uniforms );
+                    uniforms['tCube'].value= textureCube; // textureCube has been init before
+                    var material = new THREE.ShaderMaterial({
+                            fragmentShader    : shader.fragmentShader,
+                            vertexShader  : shader.vertexShader,
+                            uniforms  : uniforms
+                    });
+                    
+                    // build the skybox Mesh 
+                    skybox    = new THREE.Mesh( new THREE.BoxGeometry( 100000, 100000, 100000, 1, 1, 1, null, true ), material );
+                   */
+                
+   
 		</script>
-                
-                
 	</body>
 </html>
