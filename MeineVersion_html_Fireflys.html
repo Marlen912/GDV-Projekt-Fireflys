@@ -351,29 +351,30 @@
                                         objects.push( meshClone );
                                         }
   
-             /*   //skybox
-                var position  = ["purplenebula_front.jpg", "purplenebula_back.jpg", "purplenebula_left.jpg", "purplenebula_right.jpg", "purplenebula_top.jpg", "purplenebula_top.jpg"];
+                //skybox
+                var position  = ["starfield_front.jpg", "starfield_right.jpg", "starfield_front.jpg", "starfield_left.jpg", "starfield_back.jpg", "starfield_right.jpg"];
                
                 var skyArray = [];
-                var material;
-                var texture;
+                
+                var skytexture;
+                var skymaterial;
                 
                 for(var i =0;i<position.length;i++){
-                texture= new THREE.ImageUtils.loadTexture(position[i]);
-                material = new THREE.MeshBasicMaterial({ map:texture, side:THREE.BackSide});
-                skyArray.push( material);
+                skytexture= new THREE.ImageUtils.loadTexture(position[i]);
+                skymaterial = new THREE.MeshBasicMaterial({ map:skytexture, side:THREE.BackSide});
+                skyArray.push( skymaterial);
                 }
                 
-                var skyGeometry = new THREE.BoxGeometry( 2000, 2000, 100,100);
+                var skyGeometry = new THREE.BoxGeometry(1200,1200,1200);
                 var skyMaterial = new THREE.MeshFaceMaterial( skyArray );
-                 skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
+                skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
                 
                   
                     // add it to the scene
                     scene.add( skyBox );
                                       
                      
-   */
+   
                                                                                                                                                            
 				renderer = new THREE.WebGLRenderer();
 				
@@ -487,9 +488,9 @@
                                         
 				}  
                                  
-                                
+                                skyBox.rotation.x += 0.0003;
 				renderer.render( scene, camera );
-                             // skyBox.rotation.x += 0.0005;
+                             
                                 
                 
 			}

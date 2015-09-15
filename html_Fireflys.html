@@ -347,7 +347,7 @@
                                         
                      //skybox
                                                                                                                                                            
-		var position  = ["purplenebula_front.jpg", "purplenebula_back.jpg", "purplenebula_left.jpg", "purplenebula_right.jpg", "purplenebula_top.jpg", "purplenebula_top.jpg"];
+		var position  = ["purplenebula_back.jpg", "purplenebula_top.jpg", "purplenebula_back.jpg", "purplenebula_left.jpg", "purplenebula_top.jpg", "purplenebula_top.jpg"];
                
                 var skyArray = [];
                 
@@ -360,7 +360,7 @@
                 skyArray.push( skymaterial);
                 }
                 
-                var skyGeometry = new THREE.BoxGeometry(1500,1500,1500);
+                var skyGeometry = new THREE.BoxGeometry(1200,1200,1200);
                 var skyMaterial = new THREE.MeshFaceMaterial( skyArray );
                 skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
                 
@@ -519,7 +519,7 @@
                                         
 				}  
                                  
-                                skyBox.rotation.x += 0.0005;
+                                skyBox.rotation.x += 0.0003;
 				renderer.render( scene, camera );
 			
                              
