@@ -54,6 +54,7 @@
                         var sphere;
                         var meshClone;
 			var raycaster;
+                        var skyBox;
 
 			
 
@@ -150,10 +151,24 @@
 
 				scene = new THREE.Scene();
 
-				var light = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 0.75 );
-				light.position.set( 0.5, 100, 0.75 );
-				scene.add( light );
+                                 // white spotlight shining from the side, casting shadow
 
+                            var spotLight = new THREE.SpotLight( 0xffffff );
+                            spotLight.position.set( 20, 500, 50 );
+
+                            spotLight.castShadow = true;
+
+                            spotLight.shadowMapWidth = 1024;
+                            spotLight.shadowMapHeight = 1024;
+
+
+                            spotLight.shadowCameraNear = 500;
+                            spotLight.shadowCameraFar = 5000;
+                            spotLight.shadowCameraFov = 30;
+                            spotLight.shadowDarkness = 0.8;
+
+                            scene.add( spotLight );
+				
 				controls = new THREE.PointerLockControls( camera );
 				scene.add( controls.getObject() );
 
@@ -224,7 +239,7 @@
 				raycaster = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, - 1, 0 ), 0,10);
 
 				// floor
-                                geometry = new THREE.PlaneGeometry( 2000, 2000, 100,100);
+                                geometry = new THREE.PlaneGeometry( 2000, 2000,100,100);
 				geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
                                 for ( var i = 0, l = geometry.vertices.length; i < l; i ++ ) {
 
@@ -330,20 +345,35 @@
                                         objects.push( meshClone );
                                         }
                                         
-
+                     //skybox
                                                                                                                                                            
-				renderer = new THREE.WebGLRenderer();
-				renderer.setClearColor( 0x0fffffff );
-				renderer.setPixelRatio( window.devicePixelRatio );
-				renderer.setSize( window.innerWidth, window.innerHeight );
-                                document.body.appendChild( renderer.domElement );
+		var position  = ["purplenebula_front.jpg", "purplenebula_back.jpg", "purplenebula_left.jpg", "purplenebula_right.jpg", "purplenebula_top.jpg", "purplenebula_top.jpg"];
+               
+                var skyArray = [];
+                
+                var skytexture;
+                var skymaterial;
+                
+                for(var i =0;i<position.length;i++){
+                skytexture= new THREE.ImageUtils.loadTexture(position[i]);
+                skymaterial = new THREE.MeshBasicMaterial({ map:skytexture, side:THREE.BackSide});
+                skyArray.push( skymaterial);
+                }
+                
+                var skyGeometry = new THREE.BoxGeometry(1500,1500,1500);
+                var skyMaterial = new THREE.MeshFaceMaterial( skyArray );
+                skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
+                
+                  
+                    // add it to the scene
+                    scene.add( skyBox );
                                 
 
-				//
+				
 
-				window.addEventListener( 'resize', onWindowResize, false );
+		
                                 
-                                
+                          /*      
                                 waterNormals = new THREE.ImageUtils.loadTexture( 'textures/waternormals.jpg' );
 				waterNormals.wrapS = waterNormals.wrapT = THREE.RepeatWrapping; 
 
@@ -369,57 +399,7 @@
 				scene.add( mirrorMesh );
 
 
-				// load skybox
-
-				var cubeMap = new THREE.CubeTexture( [] );
-				cubeMap.format = THREE.RGBFormat;
-				cubeMap.flipY = false;
-
-				var loader = new THREE.ImageLoader();
-				loader.load( 'textures/skyboxsun25degtest.png', function ( image ) {
-
-					var getSide = function ( x, y ) {
-
-						var size = 1024;
-
-						var canvas = document.createElement( 'canvas' );
-						canvas.width = size;
-						canvas.height = size;
-
-						var context = canvas.getContext( '2d' );
-						context.drawImage( image, - x * size, - y * size );
-
-						return canvas;
-
-					};
-
-					cubeMap.images[ 0 ] = getSide( 2, 1 ); // px
-					cubeMap.images[ 1 ] = getSide( 0, 1 ); // nx
-					cubeMap.images[ 2 ] = getSide( 1, 0 ); // py
-					cubeMap.images[ 3 ] = getSide( 1, 2 ); // ny
-					cubeMap.images[ 4 ] = getSide( 1, 1 ); // pz
-					cubeMap.images[ 5 ] = getSide( 3, 1 ); // nz
-					cubeMap.needsUpdate = true;
-
-				} );
-
-				var cubeShader = THREE.ShaderLib['cube'];
-				cubeShader.uniforms['tCube'].value = cubeMap;
-
-				var skyBoxMaterial = new THREE.ShaderMaterial( {
-					fragmentShader: cubeShader.fragmentShader,
-					vertexShader: cubeShader.vertexShader,
-					uniforms: cubeShader.uniforms,
-					depthWrite: false,
-					side: THREE.BackSide
-				});
-
-				var skyBox = new THREE.Mesh(
-					new THREE.BoxGeometry( 1000000, 1000000, 1000000 ),
-					skyBoxMaterial
-				);
 				
-				scene.add( skyBox );
 
 
 				var geometry = new THREE.IcosahedronGeometry( 400, 4 );
@@ -435,9 +415,17 @@
 					shininess: 100,
 					envMap: cubeMap
 				} );
+				*/
 				
-				sphere = new THREE.Mesh( geometry, material );
-				scene.add( sphere );
+                                renderer = new THREE.WebGLRenderer();
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+                                document.body.appendChild( renderer.domElement );
+                                
+
+                                
+
+				window.addEventListener( 'resize', onWindowResize, false );
 
 			}
 
@@ -454,7 +442,7 @@
 			function animate() {
                                 
                               
-		requestAnimationFrame( animate );
+                        	requestAnimationFrame( animate );
 		
 	                                                        
 				if ( controlsEnabled ) {
@@ -531,7 +519,8 @@
                                         
 				}  
                                  
-                                
+                                skyBox.rotation.x += 0.0005;
+				renderer.render( scene, camera );
 			
                              
                                 
@@ -540,33 +529,16 @@
                         
                          
 
-		function render() {
-
-				var time = performance.now() * 0.001;
-
-				sphere.position.y = Math.sin( time ) * 500 + 250;
-				sphere.rotation.x = time * 0.5;
-				sphere.rotation.z = time * 0.51;
-
-				water.material.uniforms.time.value += 1.0 / 60.0;
-				controls.update();
-				water.render();
-				renderer.render( scene, camera );
-
-			}
-
+		
 			
 			
 			
 
-			}
+			
 
-			}
+			
 
-
-			}
-
-		</script>
+					</script>
                 
                 
 	</body>
