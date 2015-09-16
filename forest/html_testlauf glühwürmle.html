@@ -665,7 +665,47 @@
                                                  
                                              
                                               					prevTime = time;
-                                                                                
+                                //
+                                <Transform DEF="Sun_TRANSFORM"
+		           translation="0.240168 0.542886 0.457424"
+		           scale="11.598377 11.598377 11.598377"
+		           rotation="0.000000 0.707107 0.707107 3.141593"
+		           >
+			<DirectionalLight DEF="LA_Sun"
+			                  ambientIntensity="1.0000"
+			                  color="1.0000 1.0000 1.0000"
+			                  intensity="0.5714"
+			                  direction="0.0000 -1.0000 0.0000"
+			                  />
+		</Transform>
+		<Transform DEF="Fireflie_Armature_TRANSFORM"
+		           translation="-0.000000 1.050010 1.017324"
+		           scale="1.000000 1.000000 1.000000"
+		           rotation="0.000000 0.707107 0.707107 3.141593"
+		           >
+			<Transform DEF="Fireflie_Stag_TRANSFORM"
+			           translation="0.000010 -1.017314 -1.050000"
+			           scale="-0.010000 -0.010000 -0.010000"
+			           rotation="-0.000000 0.707107 -0.707107 3.141593"
+			           >
+				<Transform DEF="Fireflie_Stag_ifs_TRANSFORM"
+				           translation="0.000000 0.000000 0.000000"
+				           scale="1.000000 1.000000 1.000000"
+				           rotation="-0.000000 0.000000 0.000000 0.000000"
+				           >
+					<Group DEF="group_ME_Fireflie_Stag">
+						<Shape>
+							<Appearance>
+								<Material DEF="MA_Pelt"
+								          diffuseColor="0.723 0.554 0.414"
+								          specularColor="0.022 0.017 0.014"
+								          emissiveColor="0.007 0.006 0.004"
+								          ambientIntensity="0.333"
+								          shininess="0.010"
+								          transparency="0.0"
+								          />
+							</Appearance>
+                                                
                                                                                 
                                 // Bewegung der Glühwürmle
                                 </Transform> 
