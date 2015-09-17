@@ -239,7 +239,11 @@
 				raycaster = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, - 1, 0 ), 0,10);
 
 				// floor
-                                geometry = new THREE.PlaneGeometry( 2000, 2000,100,100);
+                              
+                                var textureFloor = new THREE.ImageUtils.loadTexture( "ground.jpg" );                             
+                                var materialFloor = new THREE.MeshBasicMaterial( {  map :  textureFloor });
+                                
+                                geometry = new THREE.PlaneGeometry( 2000, 2000, 100,100);
 				geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
                                 for ( var i = 0, l = geometry.vertices.length; i < l; i ++ ) {
 
@@ -248,24 +252,19 @@
 					vertex.z += Math.random() * 20 - 10;
 
 				}
-                                var texture = new THREE.ImageUtils.loadTexture( 'grasslight.jpg' );
+                               
 				for ( var i = 0, l = geometry.faces.length; i < l; i ++ ) {
 
 					var face = geometry.faces[ i ];
-					face.vertexColors[ 0 ] = new THREE.Color(texture );
-					face.vertexColors[ 1 ] = new THREE.Color(texture);
-					face.vertexColors[ 2 ] = new THREE.Color(texture );
+					face.vertexColors[ 0 ] = new THREE.Color(textureFloor );
+					face.vertexColors[ 1 ] = new THREE.Color(textureFloor);
+					face.vertexColors[ 2 ] = new THREE.Color(textureFloor );
                                        
 				}
-                                
-                                material = new THREE.MeshBasicMaterial( { map : texture } );
-
-
-				mesh = new THREE.Mesh( geometry, material);
-                             
+                             mesh = new THREE.Mesh( geometry, materialFloor);
 				scene.add( mesh );
                                 
-                                  //object sphere      
+                                 //object sphere      
                                  geometry = new THREE.SphereGeometry( 10, 20, 10 );
                                  material = new THREE.MeshBasicMaterial({color:0xFF00FF});
                                  sphere = new THREE.Mesh(geometry,material);
@@ -273,6 +272,8 @@
                                  sphere.position.z = 0;
                                  sphere.position.y = 5;
                                  scene.add(sphere);
+                                 
+                                 
                                  
 				// Objects Trees
 
@@ -501,10 +502,10 @@
                                              
                                             
                                                 
-                                                var nearCloneX = (controls.getObject().position.x < (sphere.position.x+ 50)) && (controls.getObject().position.x > (sphere.position.x- 50));
-                                                var nearCloneZ = (controls.getObject().position.z < (sphere.position.z+ 50)) && (controls.getObject().position.z > (sphere.position.z- 50));
+                                                var nearSphereX = (controls.getObject().position.x < (sphere.position.x+ 50)) && (controls.getObject().position.x > (sphere.position.x- 50));
+                                                var nearSphereZ = (controls.getObject().position.z < (sphere.position.z+ 50)) && (controls.getObject().position.z > (sphere.position.z- 50));
                                                 
-                                                 if(nearCloneX === true && nearCloneZ === true)                                                 
+                                                 if(nearSphereX === true && nearSphereZ === true)                                                 
                                                 {
                                                     document.addEventListener('keydown',changeColor);  
                                                 }
@@ -513,7 +514,15 @@
                                                     document.removeEventListener('keydown',changeColor);
                                                 }
                                                 
-                                                 
+                                                var nearSkyX = (controls.getObject().position.x > (skyBox.position.x + 200)|| controls.getObject().position.x < (skyBox.position.x - 200));
+                                                var nearSkyZ = (controls.getObject().position.z > (skyBox.position.z + 200)|| controls.getObject().position.z < (skyBox.position.z - 200));
+                                                
+                                                if (nearSkyX === true || nearSkyZ === true)
+                                                {
+                                                    controls.getObject().position.x=0;
+                                                    controls.getObject().position.z=0;
+                                                           
+                                                }
                                              
                                               					prevTime = time;
                                         
