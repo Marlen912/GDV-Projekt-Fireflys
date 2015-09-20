@@ -368,14 +368,20 @@
                   
                     // add it to the scene
                     scene.add( skyBox );
-                                
-
-				
-
+                    
+                       
+                        //Mond        
+                        var moonTex = THREE.ImageUtils.loadTexture( 'moon_global.jpg' );
+                      //  var moonMaterial = new THREE.MeshLambertMaterial( { map: moonTex, side: THREE.DoubleSide } );
+			moonMaterial = new THREE.MeshBasicMaterial({ map: moonTex });
+                        moon = new THREE.Mesh( new THREE.SphereGeometry( 100, 100, 10 ), moonMaterial );
+                        moon.position.set( 300, 600, 250 );
+			        
+                            scene.add( moon );
 		
-                                
-                          /*      
-                                waterNormals = new THREE.ImageUtils.loadTexture( 'textures/waternormals.jpg' );
+                                //Wasser
+                                /*
+                                waterNormals = new THREE.ImageUtils.loadTexture( 'waternormals.jpg' );
 				waterNormals.wrapS = waterNormals.wrapT = THREE.RepeatWrapping; 
 
 				water = new THREE.Water( renderer, camera, scene, {
@@ -383,40 +389,41 @@
 					textureHeight: 512,
 					waterNormals: waterNormals,
 					alpha: 	1.0,
-					sunDirection: light.position.clone().normalize(),
-					sunColor: 0xffffff,
+					moonDirection: light.position.clone().normalize(),
+					moonColor: 0xffffff,
 					waterColor: 0x001e0f,
 					distortionScale: 50.0,
 				} );
 
 
-				mirrorMesh = new THREE.Mesh(
-					new THREE.PlaneBufferGeometry( parameters.width * 500, parameters.height * 500 ),
-					water.material
+				var waterGeometry = new THREE.IcosahedronGeometry( 400, 4 );
+
+				for ( var i = 0, j = waterGeometry.faces.length; i < j; i ++ ) {
+
+					waterGeometry.faces[ i ].color.setHex( Math.random() * 0xffffff );
+
+				}
+
+				var waterMaterial = new THREE.MeshPhongMaterial( {
+					vertexColors: THREE.FaceColors,
+					shininess: 100,
+					envMap: cubeMap
+				} );
+				
+                                mirrorMesh = new THREE.Mesh(
+					new THREE.PlaneBufferGeometry( 1500, 1500,1 ,1 ),
+					water.waterMaterial
 				);
 
 				mirrorMesh.add( water );
 				mirrorMesh.rotation.x = - Math.PI * 0.5;
 				scene.add( mirrorMesh );
-
-
-				
-
-
-				var geometry = new THREE.IcosahedronGeometry( 400, 4 );
-
-				for ( var i = 0, j = geometry.faces.length; i < j; i ++ ) {
-
-					geometry.faces[ i ].color.setHex( Math.random() * 0xffffff );
-
-				}
-
-				var material = new THREE.MeshPhongMaterial( {
-					vertexColors: THREE.FaceColors,
-					shininess: 100,
-					envMap: cubeMap
-				} );
-				*/
+                                */
+                                
+                                
+                                
+                                
+                                
 				
                                 renderer = new THREE.WebGLRenderer();
 				renderer.setPixelRatio( window.devicePixelRatio );
