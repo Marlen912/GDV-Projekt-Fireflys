@@ -25,6 +25,8 @@
 		<script src="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/js/controls/PointerLockControls.js"></script>
                 <script src="https://raw.githubusercontent.com/mrdoob/eventdispatcher.js/master/src/EventDispatcher.js"></script>
                 <script src='https://raw.githubusercontent.com/jeromeetienne/threex.grassground/master/threex.grassground.js'></script>
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+                <script src="https://mirror-three-js.googlecode.com/git/FlatMirror.js"></script>
 		<div id="position">
                 <span >Current Position: </span>
                 </div>  
@@ -208,6 +210,32 @@
 					}
 
 				};
+                                
+                               
+    
+   //MIRORR planes
+    frontMirror = new THREE.FlatMirror(renderer, camera, {clipBias: 0.003, textureWidth: 800, textureHeight: 600} );
+
+    backMirror = new THREE.FlatMirror(renderer, camera, {clipBias: 0.003, textureWidth: 800, textureHeight: 600} );	
+
+	// some decorative spheres
+    var sphereCap = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 15*Math.cos(Math.PI/180*30), 0.1, 24 , 1), new THREE.MeshPhongMaterial({color: 0x673454}) );
+	sphereCap.position.y = -15 * Math.sin(Math.PI/180*30) - 0.05;
+	sphereCap.rotateX(-Math.PI);
+	
+	var halfSphere = new THREE.Mesh(new THREE.SphereGeometry(15, 24, 24, Math.PI/2, Math.PI*2.0, 0, Math.PI/180*120), new THREE.MeshPhongMaterial({color: 0x673454, ambient: 0xFFFFFF, emissive: 0x111111}) );
+	halfSphere.add(sphereCap);
+	halfSphere.rotateX(-Math.PI / 180*135); 
+	halfSphere.rotateZ(-Math.PI / 180*20); 
+	halfSphere.position.y = 7.5 + 15 * Math.sin(Math.PI/180*30);
+	
+	sphereGroup = new THREE.Object3D();
+	sphereGroup.add(halfSphere);
+	scene.add(sphereGroup);	
+	
+    var smallSphere = new THREE.Mesh(new THREE.SphereGeometry(5, 4, 4), new THREE.MeshBasicMaterial({color: 0x7f7f7f, wireframe: true}) );
+	smallSphere.position.set(-45,4.9,45);
+    scene.add(smallSphere);	
 
 				var onKeyUp = function ( event ) {
 
@@ -489,6 +517,8 @@
 				}  
                                  
                                 skyBox.rotation.x += 0.0003;
+                                frontMirror.renderWithMirror(backMirror);
+                                backMirror.renderWithMirror(frontMirror);
 				renderer.render( scene, camera );
                              
                                 
