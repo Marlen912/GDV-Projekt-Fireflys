@@ -55,6 +55,7 @@
                         var meshClone;
 			var raycaster;
                         var skyBox;
+                        var moon;
 
 			
 
@@ -240,30 +241,45 @@
 
 				// floor
                               
-                                var textureFloor = new THREE.ImageUtils.loadTexture( "ground.jpg" );                             
-                                var materialFloor = new THREE.MeshBasicMaterial( {  map :  textureFloor });
-                                
-                                geometry = new THREE.PlaneGeometry( 2000, 2000, 100,100);
-				geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
-                                for ( var i = 0, l = geometry.vertices.length; i < l; i ++ ) {
-
-					var vertex = geometry.vertices[ i ];
-					vertex.x += Math.random() * 20 - 10;
-					vertex.z += Math.random() * 20 - 10;
-
-				}
                                
-				for ( var i = 0, l = geometry.faces.length; i < l; i ++ ) {
+var geometry = new THREE.BufferGeometry();
+// create a simple square shape. We duplicate the top left and bottom right
+// vertices because each vertex needs to appear once per triangle.
+var vertexPositions = [
+	[-1000.0, -1000.0,  1.0],
+	[ 1000.0, -1000.0,  1.0],
+	[ 1000.0,  1000.0,  1.0],
 
-					var face = geometry.faces[ i ];
-					face.vertexColors[ 0 ] = new THREE.Color(textureFloor );
-					face.vertexColors[ 1 ] = new THREE.Color(textureFloor);
-					face.vertexColors[ 2 ] = new THREE.Color(textureFloor );
-                                       
-				}
-                             mesh = new THREE.Mesh( geometry, materialFloor);
-				scene.add( mesh );
-                                
+	[ 1000.0,  1000.0,  1.0],
+	[-1000.0,  1000.0,  1.0],
+	[-1000.0, -1000.0,  1.0]
+];
+var vertices = new Float32Array( vertexPositions.length * 3 ); // three components per vertex
+
+// components of the position vector for each vertex are stored
+// contiguously in the buffer.
+
+var textureFloor = new THREE.ImageUtils.loadTexture( "ground.jpg" );                             
+var materialFloor = new THREE.MeshBasicMaterial( {  map :  textureFloor });
+for ( var i = 0; i < vertexPositions.length; i++ )
+{
+	vertices[ i*3 + 0 ] = vertexPositions[i][0];
+        vertices[ i*3 + 0 ] = new THREE.Color(materialFloor);
+	vertices[ i*3 + 1 ] = vertexPositions[i][1];
+        vertices[ i*3 + 1 ] = new THREE.Color(materialFloor);
+	vertices[ i*3 + 2 ] = vertexPositions[i][2];
+        vertices[ i*3 + 2 ] = new THREE.Color(materialFloor);
+}
+
+// itemSize = 3 because there are 3 values (components) per vertex
+geometry.addAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
+
+var meshFloor = new THREE.Mesh( geometry, materialFloor );
+ scene.add(meshFloor);
+ 
+ 
+ 
                                  //object sphere      
                                  geometry = new THREE.SphereGeometry( 10, 20, 10 );
                                  material = new THREE.MeshBasicMaterial({color:0xFF00FF});
@@ -369,60 +385,17 @@
                     // add it to the scene
                     scene.add( skyBox );
                     
-                       
+                                   
                         //Mond        
                         var moonTex = THREE.ImageUtils.loadTexture( 'moon_global.jpg' );
                       //  var moonMaterial = new THREE.MeshLambertMaterial( { map: moonTex, side: THREE.DoubleSide } );
 			moonMaterial = new THREE.MeshBasicMaterial({ map: moonTex });
-                        moon = new THREE.Mesh( new THREE.SphereGeometry( 100, 100, 10 ), moonMaterial );
+                        moon = new THREE.Mesh( new THREE.SphereGeometry( 75, 75, 75 ), moonMaterial );
                         moon.position.set( 300, 600, 250 );
 			        
                             scene.add( moon );
 		
-                                //Wasser
-                                /*
-                                waterNormals = new THREE.ImageUtils.loadTexture( 'waternormals.jpg' );
-				waterNormals.wrapS = waterNormals.wrapT = THREE.RepeatWrapping; 
-
-				water = new THREE.Water( renderer, camera, scene, {
-					textureWidth: 512, 
-					textureHeight: 512,
-					waterNormals: waterNormals,
-					alpha: 	1.0,
-					moonDirection: light.position.clone().normalize(),
-					moonColor: 0xffffff,
-					waterColor: 0x001e0f,
-					distortionScale: 50.0,
-				} );
-
-
-				var waterGeometry = new THREE.IcosahedronGeometry( 400, 4 );
-
-				for ( var i = 0, j = waterGeometry.faces.length; i < j; i ++ ) {
-
-					waterGeometry.faces[ i ].color.setHex( Math.random() * 0xffffff );
-
-				}
-
-				var waterMaterial = new THREE.MeshPhongMaterial( {
-					vertexColors: THREE.FaceColors,
-					shininess: 100,
-					envMap: cubeMap
-				} );
-				
-                                mirrorMesh = new THREE.Mesh(
-					new THREE.PlaneBufferGeometry( 1500, 1500,1 ,1 ),
-					water.waterMaterial
-				);
-
-				mirrorMesh.add( water );
-				mirrorMesh.rotation.x = - Math.PI * 0.5;
-				scene.add( mirrorMesh );
-                                */
-                                
-                                
-                                
-                                
+                             
                                 
 				
                                 renderer = new THREE.WebGLRenderer();
@@ -536,6 +509,7 @@
 				}  
                                  
                                 skyBox.rotation.x += 0.0003;
+                                moon.rotation.x += 0.0009;
 				renderer.render( scene, camera );
 			
                              
