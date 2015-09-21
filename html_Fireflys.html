@@ -25,6 +25,9 @@
 		<script src="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/js/controls/PointerLockControls.js"></script>
                 <script src="https://raw.githubusercontent.com/mrdoob/eventdispatcher.js/master/src/EventDispatcher.js"></script>
                 <script src='https://raw.githubusercontent.com/jeromeetienne/threex.grassground/master/threex.grassground.js'></script>
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+                <script src="https://mirror-three-js.googlecode.com/git/FlatMirror.js"></script>
+		
                 
                 <script src="js/controls/OrbitControls.js"></script>
 		<script src="js/Mirror.js"></script>
@@ -55,6 +58,12 @@
                         var meshClone;
 			var raycaster;
                         var skyBox;
+var frontMirror;
+var backMirror;<<<<<<< .mine
+
+=======
+                        var backMirror;
+>>>>>>> .theirs
 
 			
 
@@ -279,6 +288,7 @@
 
 
 				// floor
+<<<<<<< HEAD
                                 var textureFloor = new THREE.ImageUtils.loadTexture( "ground.jpg" );                             
                                 var materialFloor = new THREE.MeshBasicMaterial( {  map :  textureFloor });
                                 
@@ -291,18 +301,48 @@
 					vertex.z += Math.random() * 20 - 10;
 
 				}
+=======
+                              
+>>>>>>> e2f7d6c0e0597ca635f1c4f2d75589a900062317
                                
-				for ( var i = 0, l = geometry.faces.length; i < l; i ++ ) {
+var geometry = new THREE.BufferGeometry();
+// create a simple square shape. We duplicate the top left and bottom right
+// vertices because each vertex needs to appear once per triangle.
+var vertexPositions = [
+	[-1000.0, -1000.0,  1.0],
+	[ 1000.0, -1000.0,  1.0],
+	[ 1000.0,  1000.0,  1.0],
 
-					var face = geometry.faces[ i ];
-					face.vertexColors[ 0 ] = new THREE.Color(textureFloor );
-					face.vertexColors[ 1 ] = new THREE.Color(textureFloor);
-					face.vertexColors[ 2 ] = new THREE.Color(textureFloor );
-                                       
-				}
-                             mesh = new THREE.Mesh( geometry, materialFloor);
-				scene.add( mesh );
-                                
+	[ 1000.0,  1000.0,  1.0],
+	[-1000.0,  1000.0,  1.0],
+	[-1000.0, -1000.0,  1.0]
+];
+var vertices = new Float32Array( vertexPositions.length * 3 ); // three components per vertex
+
+// components of the position vector for each vertex are stored
+// contiguously in the buffer.
+
+var textureFloor = new THREE.ImageUtils.loadTexture( "ground.jpg" );                             
+var materialFloor = new THREE.MeshBasicMaterial( {  map :  textureFloor });
+for ( var i = 0; i < vertexPositions.length; i++ )
+{
+	vertices[ i*3 + 0 ] = vertexPositions[i][0];
+        vertices[ i*3 + 0 ] = new THREE.Color(materialFloor);
+	vertices[ i*3 + 1 ] = vertexPositions[i][1];
+        vertices[ i*3 + 1 ] = new THREE.Color(materialFloor);
+	vertices[ i*3 + 2 ] = vertexPositions[i][2];
+        vertices[ i*3 + 2 ] = new THREE.Color(materialFloor);
+}
+
+// itemSize = 3 because there are 3 values (components) per vertex
+geometry.addAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
+
+var meshFloor = new THREE.Mesh( geometry, materialFloor );
+ scene.add(meshFloor);
+ 
+ 
+ 
                                  //object sphere      
                                  geometry = new THREE.SphereGeometry( 10, 20, 10 );
                                  material = new THREE.MeshBasicMaterial({color:0xFF00FF});
@@ -408,18 +448,146 @@
                     // add it to the scene
                     scene.add( skyBox );
                     
-                       
+                                   
                         //Mond        
                         var moonTex = THREE.ImageUtils.loadTexture( 'moon_global.jpg' );
                       //  var moonMaterial = new THREE.MeshLambertMaterial( { map: moonTex, side: THREE.DoubleSide } );
 			moonMaterial = new THREE.MeshBasicMaterial({ map: moonTex });
-                        moon = new THREE.Mesh( new THREE.SphereGeometry( 100, 100, 10 ), moonMaterial );
+                        moon = new THREE.Mesh( new THREE.SphereGeometry( 75, 75, 75 ), moonMaterial );
                         moon.position.set( 300, 600, 250 );
 			        
                             scene.add( moon );
 		
+<<<<<<< .mine
+                             
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+=======
+     /*           
+                //MIRORR planes
+    frontMirror = new THREE.FlatMirror(renderer, controls.getObject(), {clipBias: 0.003, textureWidth: 800, textureHeight: 600} );
+
+    backMirror = new THREE.FlatMirror(renderer, controls.getObject(), {clipBias: 0.003, textureWidth: 800, textureHeight: 600} );	
+
+    	// walls
+    var whiteMat = new THREE.MeshBasicMaterial({color: 0xffffff});
+    var planeGeo = new THREE.PlaneGeometry(100.1, 100.1);
+    
+    var planeMesh = new THREE.Mesh( planeGeo, whiteMat );
+	planeMesh.rotation.x+=(-Math.PI/2);
+	scene.add(planeMesh);
+    
+    var planeTop = new THREE.Mesh( planeGeo, whiteMat );
+	planeTop.position.y = 100;
+	planeTop.rotation.x+=(Math.PI/2);
+	scene.add(planeTop);
+	
+	var planeBack = new THREE.Mesh( planeGeo, backMirror.planematerial );
+	planeBack.add(backMirror);
+    planeBack.position.z = -50;
+	planeBack.position.y = 50;
+	scene.add(planeBack);
+	
+	var planeFront = new THREE.Mesh( planeGeo, frontMirror.planematerial );
+    planeFront.add(frontMirror);
+    planeFront.position.z = 50;
+	planeFront.position.y = 50;
+	planeFront.rotation.y+=(Math.PI);
+	scene.add(planeFront);
+	
+	var planeRight = new THREE.Mesh( planeGeo, new THREE.MeshBasicMaterial({color: 0x00ff00}) );
+	planeRight.position.x = 50;
+	planeRight.position.y = 50;
+	planeRight.rotation.y+=(-Math.PI/2);
+	scene.add(planeRight);
+	
+	var planeLeft = new THREE.Mesh( planeGeo, new THREE.MeshBasicMaterial({color: 0xff0000}) );
+	planeLeft.position.x = -50;
+	planeLeft.position.y = 50;
+	planeLeft.rotation.y+=(Math.PI/2);
+	scene.add(planeLeft);
                                 //Wasser
-                                /*
+        */                        /*
                                 waterNormals = new THREE.ImageUtils.loadTexture( 'waternormals.jpg' );
 				waterNormals.wrapS = waterNormals.wrapT = THREE.RepeatWrapping; 
 
@@ -458,10 +626,7 @@
 				mirrorMesh.rotation.x = - Math.PI * 0.5;
 				scene.add( mirrorMesh );
                                 */
-                                
-                                
-                                
-                                
+>>>>>>> .theirs
                                 
 				
                                 renderer = new THREE.WebGLRenderer();
@@ -569,13 +734,22 @@
                                                     controls.getObject().position.z=0;
                                                            
                                                 }
-                                             
+                                                
+                                            
                                               					prevTime = time;
                                         
 				}  
                                  
                                 skyBox.rotation.x += 0.0003;
+<<<<<<< .mine
+                                moon.rotation.x += 0.0009;
 				renderer.render( scene, camera );
+
+=======
+                              //  frontMirror.renderWithMirror(backMirror);
+                             //   backMirror.renderWithMirror(frontMirror);
+				renderer.render( scene, camera); //frontMirror, backMirror );
+>>>>>>> .theirs
 			
                              
                                 
