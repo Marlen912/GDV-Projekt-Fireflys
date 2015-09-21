@@ -151,23 +151,23 @@
 
 				scene = new THREE.Scene();
 
-                                 // white spotlight shining from the side, casting shadow
 
-                            var spotLight = new THREE.SpotLight( 0xffffff );
-                            spotLight.position.set( 20, 500, 50 );
+                            // directionlLight -> Richtung Mondlicht °°°
+                            var directionalLight = new THREE.DirectionalLight( 0xffffff );
+                            directionalLight.position.set( 20, 500, 50 );
 
-                            spotLight.castShadow = true;
+                            directionalLight.castShadow = true;
 
-                            spotLight.shadowMapWidth = 1024;
-                            spotLight.shadowMapHeight = 1024;
+                            directionalLight.shadowMapWidth = 1024;
+                            directionalLight.shadowMapHeight = 1024;
 
 
-                            spotLight.shadowCameraNear = 500;
-                            spotLight.shadowCameraFar = 5000;
-                            spotLight.shadowCameraFov = 30;
-                            spotLight.shadowDarkness = 0.8;
+                            directionalLight.shadowCameraNear = 500;
+                            directionalLight.shadowCameraFar = 5000;
+                            directionalLight.shadowCameraFov = 30;
+                            directionalLight.shadowDarkness = 0.8;
 
-                            scene.add( spotLight );
+                            scene.add( directionalLight );
 				
 				controls = new THREE.PointerLockControls( camera );
 				scene.add( controls.getObject() );
@@ -232,14 +232,53 @@
 					}
 
 				};
+                                
+                                // Shadow °°
+                                function initShadowMapViewers() {
+
+				dirLightShadowMapViewer = new THREE.ShadowMapViewer( dirLight );
+				dirLightShadowMapViewer.position.x = 10;
+				dirLightShadowMapViewer.position.y = 10;
+				dirLightShadowMapViewer.size.width = 256;
+				dirLightShadowMapViewer.size.height = 256;
+				dirLightShadowMapViewer.update();
+                                
+				spotLightShadowMapViewer = new THREE.ShadowMapViewer( spotLight );
+				spotLightShadowMapViewer.size.set( 256, 256 );
+				spotLightShadowMapViewer.position.set( 276, 10 );
+				// spotLightShadowMapViewer.update();
+                                {
+
+                                /*function renderShadowMapViewers() { //-> shadowMap°°
+
+				dirLightShadowMapViewer.render( renderer );
+				spotLightShadowMapViewer.render( renderer );
+                                }
+
+                                function render() {
+
+				var delta = clock.getDelta();
+
+				renderScene();
+				renderShadowMapViewers();
+
+				torusKnot.rotation.x += 0.25 * delta;
+				torusKnot.rotation.y += 2 * delta;
+				torusKnot.rotation.z += 1 * delta;
+
+				cube.rotation.x += 0.25 * delta;
+				cube.rotation.y += 2 * delta;
+				cube.rotation.z += 1 * delta;
+                                }*/
+
 
 				document.addEventListener( 'keydown', onKeyDown);
 				document.addEventListener( 'keyup', onKeyUp);
 
 				raycaster = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, - 1, 0 ), 0,10);
 
+
 				// floor
-                              
                                 var textureFloor = new THREE.ImageUtils.loadTexture( "ground.jpg" );                             
                                 var materialFloor = new THREE.MeshBasicMaterial( {  map :  textureFloor });
                                 
