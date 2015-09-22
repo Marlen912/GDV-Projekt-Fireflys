@@ -175,6 +175,44 @@
                                
                             scene.add( directionalLight );
                             
+                             // Shadow °° bitte die function immer so wie in zeile 179 schreiben,dann funktioiert auch alles. Jetzt kann die function mit "Bezeichner"(); aufgerufen werden. MfG Lucas
+                                var initShadowMapViewers = function() {
+
+				dirLightShadowMapViewer = new THREE.ShadowMapViewer( dirLight );
+				dirLightShadowMapViewer.position.x = 10;
+				dirLightShadowMapViewer.position.y = 10;
+				dirLightShadowMapViewer.size.width = 256;
+				dirLightShadowMapViewer.size.height = 256;
+				dirLightShadowMapViewer.update();
+                                
+				spotLightShadowMapViewer = new THREE.ShadowMapViewer( spotLight );
+				spotLightShadowMapViewer.size.set( 256, 256 );
+				spotLightShadowMapViewer.position.set( 276, 10 );
+				// spotLightShadowMapViewer.update();
+                            };
+
+                                /*function renderShadowMapViewers() { //-> shadowMap°°
+
+				dirLightShadowMapViewer.render( renderer );
+				spotLightShadowMapViewer.render( renderer );
+                                }
+
+                                function render() {
+
+				var delta = clock.getDelta();
+
+				renderScene();
+				renderShadowMapViewers();
+
+				torusKnot.rotation.x += 0.25 * delta;
+				torusKnot.rotation.y += 2 * delta;
+				torusKnot.rotation.z += 1 * delta;
+
+				cube.rotation.x += 0.25 * delta;
+				cube.rotation.y += 2 * delta;
+				cube.rotation.z += 1 * delta;
+                                }*/
+                            
                             
 				
 				controls = new THREE.PointerLockControls( camera );
@@ -241,102 +279,53 @@
 
 				};
                                 
-                                // Shadow °°
-                                var initShadowMapViewers = function() {
-
-				dirLightShadowMapViewer = new THREE.ShadowMapViewer( dirLight );
-				dirLightShadowMapViewer.position.x = 10;
-				dirLightShadowMapViewer.position.y = 10;
-				dirLightShadowMapViewer.size.width = 256;
-				dirLightShadowMapViewer.size.height = 256;
-				dirLightShadowMapViewer.update();
-                                
-				spotLightShadowMapViewer = new THREE.ShadowMapViewer( spotLight );
-				spotLightShadowMapViewer.size.set( 256, 256 );
-				spotLightShadowMapViewer.position.set( 276, 10 );
-				// spotLightShadowMapViewer.update();
-                            }
-
-                                /*function renderShadowMapViewers() { //-> shadowMap°°
-
-				dirLightShadowMapViewer.render( renderer );
-				spotLightShadowMapViewer.render( renderer );
-                                }
-
-                                function render() {
-
-				var delta = clock.getDelta();
-
-				renderScene();
-				renderShadowMapViewers();
-
-				torusKnot.rotation.x += 0.25 * delta;
-				torusKnot.rotation.y += 2 * delta;
-				torusKnot.rotation.z += 1 * delta;
-
-				cube.rotation.x += 0.25 * delta;
-				cube.rotation.y += 2 * delta;
-				cube.rotation.z += 1 * delta;
-                                }*/
-
-
-				document.addEventListener( 'keydown', onKeyDown);
+                              	document.addEventListener( 'keydown', onKeyDown);
 				document.addEventListener( 'keyup', onKeyUp);
 
 				raycaster = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, - 1, 0 ), 0,10);
 
 
 				// floor
+                                                          
+        var materialarray=[];   
+        var textureFloor = new THREE.ImageUtils.loadTexture( "grass_ground.jpg" ); 
+        var materialFloor = new THREE.MeshBasicMaterial({ map:textureFloor, side:THREE.DoubleSide});
+        var geometryFloor = new THREE.PlaneGeometry( 2000, 2000, 20,20);
+        geometryFloor.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
+        
+         for ( var i = 0, l = geometryFloor.vertices.length; i < l; i ++ ) {
 
-                                var textureFloor = new THREE.ImageUtils.loadTexture( "ground.jpg" );                             
-                                var materialFloor = new THREE.MeshBasicMaterial( {  map :  textureFloor });
-                                
-                                geometry = new THREE.PlaneGeometry( 2000, 2000, 100,100);
-				geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
-                                for ( var i = 0, l = geometry.vertices.length; i < l; i ++ ) {
-
-					var vertex = geometry.vertices[ i ];
+					var vertex = geometryFloor.vertices[ i ];
 					vertex.x += Math.random() * 20 - 10;
 					vertex.z += Math.random() * 20 - 10;
+                                        vertex.y += Math.random()*20 -10;
 
 				}
-
-                               
-var geometry = new THREE.BufferGeometry();
-// create a simple square shape. We duplicate the top left and bottom right
-// vertices because each vertex needs to appear once per triangle.
-var vertexPositions = [
-	[-1000.0, -1000.0,  1.0],
-	[ 1000.0, -1000.0,  1.0],
-	[ 1000.0,  1000.0,  1.0],
-
-	[ 1000.0,  1000.0,  1.0],
-	[-1000.0,  1000.0,  1.0],
-	[-1000.0, -1000.0,  1.0]
-];
-var vertices = new Float32Array( vertexPositions.length * 3 ); // three components per vertex
-
-// components of the position vector for each vertex are stored
-// contiguously in the buffer.
-
-var textureFloor = new THREE.ImageUtils.loadTexture( "ground.jpg" );                             
-var materialFloor = new THREE.MeshBasicMaterial( {  map :  textureFloor });
-for ( var i = 0; i < vertexPositions.length; i++ )
-{
-	vertices[ i*3 + 0 ] = vertexPositions[i][0];
-        vertices[ i*3 + 0 ] = new THREE.Color(materialFloor);
-	vertices[ i*3 + 1 ] = vertexPositions[i][1];
-        vertices[ i*3 + 1 ] = new THREE.Color(materialFloor);
-	vertices[ i*3 + 2 ] = vertexPositions[i][2];
-        vertices[ i*3 + 2 ] = new THREE.Color(materialFloor);
-}
-
-// itemSize = 3 because there are 3 values (components) per vertex
-geometry.addAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
-geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
-
-var meshFloor = new THREE.Mesh( geometry, materialFloor );
- scene.add(meshFloor);
+        
+	geometryFloor.faceVertexUvs[0] = [];
+                 for(var i = 0; i < geometryFloor.faces.length; i++){      
+                     
+                     geometryFloor.faceVertexUvs[0].push([
+						new THREE.Vector2( 0,0 ),
+						new THREE.Vector2( 0,1 ),
+						new THREE.Vector2( 1,1),    
+					        new THREE.Vector2( 1,0)    
+						]);
+                     
+                     
+                     geometryFloor.faces[i].materialIndex = i;
+                     materialarray.push(materialFloor);
+                     
+                 }    
+                 
+                geometryFloor.computeFaceNormals();
+                geometryFloor.dynamic = true;
+                geometryFloor.uvsNeedUpdate = true;	    
+      
+        
+                
+                var meshFloor = new THREE.Mesh( geometryFloor,new THREE.MeshFaceMaterial(materialarray) );
+                scene.add(meshFloor);
  
  
  
@@ -602,10 +591,10 @@ var meshFloor = new THREE.Mesh( geometry, materialFloor );
 					controls.getObject().translateY( velocity.y * delta );
 					controls.getObject().translateZ( velocity.z * delta );
 
-					if ( controls.getObject().position.y < 10 ) {
+					if ( controls.getObject().position.y < 15 ) {
 
 						velocity.y = 0;
-						controls.getObject().position.y = 10;
+						controls.getObject().position.y = 15;
 
 						canJump = true;
 
