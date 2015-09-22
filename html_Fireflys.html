@@ -58,12 +58,8 @@
                         var meshClone;
 			var raycaster;
                         var skyBox;
-var frontMirror;
-var backMirror;<<<<<<< .mine
-
-=======
+                        var frontMirror;
                         var backMirror;
->>>>>>> .theirs
 
 			
 
@@ -175,8 +171,11 @@ var backMirror;<<<<<<< .mine
                             directionalLight.shadowCameraFar = 5000;
                             directionalLight.shadowCameraFov = 30;
                             directionalLight.shadowDarkness = 0.8;
-
+                            
+                               
                             scene.add( directionalLight );
+                            
+                            
 				
 				controls = new THREE.PointerLockControls( camera );
 				scene.add( controls.getObject() );
@@ -243,7 +242,7 @@ var backMirror;<<<<<<< .mine
 				};
                                 
                                 // Shadow °°
-                                function initShadowMapViewers() {
+                                var initShadowMapViewers = function() {
 
 				dirLightShadowMapViewer = new THREE.ShadowMapViewer( dirLight );
 				dirLightShadowMapViewer.position.x = 10;
@@ -256,7 +255,7 @@ var backMirror;<<<<<<< .mine
 				spotLightShadowMapViewer.size.set( 256, 256 );
 				spotLightShadowMapViewer.position.set( 276, 10 );
 				// spotLightShadowMapViewer.update();
-                                {
+                            }
 
                                 /*function renderShadowMapViewers() { //-> shadowMap°°
 
@@ -288,7 +287,7 @@ var backMirror;<<<<<<< .mine
 
 
 				// floor
-<<<<<<< HEAD
+
                                 var textureFloor = new THREE.ImageUtils.loadTexture( "ground.jpg" );                             
                                 var materialFloor = new THREE.MeshBasicMaterial( {  map :  textureFloor });
                                 
@@ -301,9 +300,7 @@ var backMirror;<<<<<<< .mine
 					vertex.z += Math.random() * 20 - 10;
 
 				}
-=======
-                              
->>>>>>> e2f7d6c0e0597ca635f1c4f2d75589a900062317
+
                                
 var geometry = new THREE.BufferGeometry();
 // create a simple square shape. We duplicate the top left and bottom right
@@ -458,91 +455,7 @@ var meshFloor = new THREE.Mesh( geometry, materialFloor );
 			        
                             scene.add( moon );
 		
-<<<<<<< .mine
-                             
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-=======
      /*           
                 //MIRORR planes
     frontMirror = new THREE.FlatMirror(renderer, controls.getObject(), {clipBias: 0.003, textureWidth: 800, textureHeight: 600} );
@@ -626,7 +539,7 @@ var meshFloor = new THREE.Mesh( geometry, materialFloor );
 				mirrorMesh.rotation.x = - Math.PI * 0.5;
 				scene.add( mirrorMesh );
                                 */
->>>>>>> .theirs
+
                                 
 				
                                 renderer = new THREE.WebGLRenderer();
@@ -741,15 +654,12 @@ var meshFloor = new THREE.Mesh( geometry, materialFloor );
 				}  
                                  
                                 skyBox.rotation.x += 0.0003;
-<<<<<<< .mine
                                 moon.rotation.x += 0.0009;
 				renderer.render( scene, camera );
-
-=======
                               //  frontMirror.renderWithMirror(backMirror);
                              //   backMirror.renderWithMirror(frontMirror);
 				renderer.render( scene, camera); //frontMirror, backMirror );
->>>>>>> .theirs
+
 			
                              
                                 
