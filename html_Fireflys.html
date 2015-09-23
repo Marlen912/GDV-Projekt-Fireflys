@@ -27,6 +27,10 @@
                 <script src='https://raw.githubusercontent.com/jeromeetienne/threex.grassground/master/threex.grassground.js'></script>
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
                 <script src="https://mirror-three-js.googlecode.com/git/FlatMirror.js"></script>
+                <script src="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/js/loaders/AssimpJSONLoader.js"></script>
+                <script src="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/js/loaders/DDSLoader.js"></script>
+                <script src="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/js/loaders/MTLLoader.js"></script>
+                <script src="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/js/loaders/OBJMTLLoader.js"></script>
 		
                 
                 <script src="js/controls/OrbitControls.js"></script>
@@ -287,25 +291,25 @@
 
 				// floor
                                                           
-        var materialarray=[];   
-        var textureFloor = new THREE.ImageUtils.loadTexture( "grass_ground.jpg" ); 
-        var materialFloor = new THREE.MeshBasicMaterial({ map:textureFloor, side:THREE.DoubleSide});
-        var geometryFloor = new THREE.PlaneGeometry( 2000, 2000, 20,20);
-        geometryFloor.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
+                                 var materialarray=[];   
+                                 var textureFloor = new THREE.ImageUtils.loadTexture( "grass_ground.jpg" ); 
+                                 var materialFloor = new THREE.MeshBasicMaterial({ map:textureFloor, side:THREE.DoubleSide});
+                                 var geometryFloor = new THREE.PlaneGeometry( 2000, 2000, 20,20);
+                                geometryFloor.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
         
-         for ( var i = 0, l = geometryFloor.vertices.length; i < l; i ++ ) {
+                                for ( var i = 0, l = geometryFloor.vertices.length; i < l; i ++ ) {
 
 					var vertex = geometryFloor.vertices[ i ];
 					vertex.x += Math.random() * 20 - 10;
 					vertex.z += Math.random() * 20 - 10;
                                         vertex.y += Math.random()*20 -10;
 
-				}
+                                        }
         
-	geometryFloor.faceVertexUvs[0] = [];
-                 for(var i = 0; i < geometryFloor.faces.length; i++){      
+                                geometryFloor.faceVertexUvs[0] = [];
+                                for(var i = 0; i < geometryFloor.faces.length; i++){      
                      
-                     geometryFloor.faceVertexUvs[0].push([
+                                geometryFloor.faceVertexUvs[0].push([
 						new THREE.Vector2( 0,0 ),
 						new THREE.Vector2( 0,1 ),
 						new THREE.Vector2( 1,1),    
@@ -313,19 +317,16 @@
 						]);
                      
                      
-                     geometryFloor.faces[i].materialIndex = i;
-                     materialarray.push(materialFloor);
-                     
-                 }    
+                                geometryFloor.faces[i].materialIndex = i;
+                                materialarray.push(materialFloor);
+                                }    
                  
-                geometryFloor.computeFaceNormals();
-                geometryFloor.dynamic = true;
-                geometryFloor.uvsNeedUpdate = true;	    
+                                geometryFloor.computeFaceNormals();
+                                geometryFloor.dynamic = true;
+                                geometryFloor.uvsNeedUpdate = true;	    
       
-        
-                
-                var meshFloor = new THREE.Mesh( geometryFloor,new THREE.MeshFaceMaterial(materialarray) );
-                scene.add(meshFloor);
+                                var meshFloor = new THREE.Mesh( geometryFloor,new THREE.MeshFaceMaterial(materialarray) );
+                                scene.add(meshFloor);
  
  
  
@@ -338,9 +339,36 @@
                                  sphere.position.y = 5;
                                  scene.add(sphere);
                                  
+                                 //object Tree
+                                 
+                                
+                                var onProgress = function ( xhr ) {
+				if ( xhr.lengthComputable ) {
+					var percentComplete = xhr.loaded / xhr.total * 100;
+					console.log( Math.round(percentComplete, 2) + '% downloaded' );
+				}
+			};
+
+			var onError = function ( xhr ) {
+			};
+                        
+                       
+
+			
+			var loader1 = new THREE.AssimpJSONLoader();
+			loader1.load( 'ChristmasTree.json', function ( object ) {
+
+				object.scale.multiplyScalar( 20 );
+                                object.position.set(10,0,10);
+                                object.rotation.x = ( - Math.PI / 2 ) ;
+				scene.add( object );
+
+			}, onProgress, onError );
+
+                                
                                  
                                  
-				// Objects Trees
+				// Objects Trees Dummy
 
 				geometry = new THREE.BoxGeometry( 10, 50, 10 );
 
@@ -396,7 +424,7 @@
                                         mesh.add(color);
                                         mesh.add(changeColor);
                                                 
-                                                                                   
+                                                                                 
                                         for(var i=0;i<100;i++){
                                         meshClone = mesh.clone();
                                         meshClone.position.x = Math.floor( Math.random() * 20 - 10 ) * 20;
@@ -410,7 +438,8 @@
                                         scene.add(meshClone);
                                         objects.push( meshClone );
                                         }
-                                        
+                              
+            
                      //skybox
                                                                                                                                                            
 		var position  = ["purplenebula_back.jpg", "purplenebula_top.jpg", "purplenebula_back.jpg", "purplenebula_left.jpg", "purplenebula_top.jpg", "purplenebula_top.jpg"];
@@ -434,13 +463,13 @@
                     // add it to the scene
                     scene.add( skyBox );
                     
-                                   
-                        //Mond        
-                        var moonTex = THREE.ImageUtils.loadTexture( 'moon_global.jpg' );
-                      //  var moonMaterial = new THREE.MeshLambertMaterial( { map: moonTex, side: THREE.DoubleSide } );
-			moonMaterial = new THREE.MeshBasicMaterial({ map: moonTex });
-                        moon = new THREE.Mesh( new THREE.SphereGeometry( 75, 75, 75 ), moonMaterial );
-                        moon.position.set( 300, 600, 250 );
+                                 
+           //Mond        
+            var moonTex = THREE.ImageUtils.loadTexture( 'moon_global.jpg' );
+           //  var moonMaterial = new THREE.MeshLambertMaterial( { map: moonTex, side: THREE.DoubleSide } );
+            moonMaterial = new THREE.MeshBasicMaterial({ map: moonTex });
+            moon = new THREE.Mesh( new THREE.SphereGeometry( 75, 75, 75 ), moonMaterial );
+            moon.position.set( 300, 600, 250 );
 			        
                             scene.add( moon );
 		
@@ -632,8 +661,8 @@
                                                 
                                                 if (nearSkyX === true || nearSkyZ === true)
                                                 {
-                                                    controls.getObject().position.x=0;
-                                                    controls.getObject().position.z=0;
+                                                    controls.getObject().position.x = 0;
+                                                    controls.getObject().position.z = 0;
                                                            
                                                 }
                                                 
@@ -644,8 +673,7 @@
                                  
                                 skyBox.rotation.x += 0.0003;
                                 moon.rotation.x += 0.0009;
-				renderer.render( scene, camera );
-                              //  frontMirror.renderWithMirror(backMirror);
+                             //  frontMirror.renderWithMirror(backMirror);
                              //   backMirror.renderWithMirror(frontMirror);
 				renderer.render( scene, camera); //frontMirror, backMirror );
 
