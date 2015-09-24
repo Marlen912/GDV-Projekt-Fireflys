@@ -28,9 +28,7 @@
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
                 <script src="https://mirror-three-js.googlecode.com/git/FlatMirror.js"></script>
                 <script src="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/js/loaders/AssimpJSONLoader.js"></script>
-                <script src="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/js/loaders/DDSLoader.js"></script>
-                <script src="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/js/loaders/MTLLoader.js"></script>
-                <script src="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/js/loaders/OBJMTLLoader.js"></script>
+
 		
                 
                 <script src="js/controls/OrbitControls.js"></script>
@@ -339,33 +337,49 @@
                                  sphere.position.y = 5;
                                  scene.add(sphere);
                                  
+                                 
+                                 
                                  //object Tree
                                  
                                 
-                                var onProgress = function ( xhr ) {
-				if ( xhr.lengthComputable ) {
-					var percentComplete = xhr.loaded / xhr.total * 100;
-					console.log( Math.round(percentComplete, 2) + '% downloaded' );
+                         var onProgress = function ( xhr ) {
+                            if ( xhr.lengthComputable ) {
+				var percentComplete = xhr.loaded / xhr.total * 100;
+				console.log( Math.round(percentComplete, 2) + '% downloaded' );
 				}
 			};
 
 			var onError = function ( xhr ) {
 			};
                         
-                       
-
-			
+                        
+                        var texture = ['bark_loo.jpg','blatt1.jpg','blatt1_a.jpg'];
+                        var Array= [];
+                        for(var i =0;i<texture.length;i++){
+                              var Texture= new THREE.ImageUtils.loadTexture(texture[i]);
+                              var material = new THREE.MeshBasicMaterial({ map:Texture, side:THREE.BackSide});
+                            Array.push( material);
+                            }
+                            
+                            
+                        for(var i=0;i<10;i++)
+                        {
 			var loader1 = new THREE.AssimpJSONLoader();
-			loader1.load( 'ChristmasTree.json', function ( object ) {
+			loader1.load( 'Tree1.json', function ( object ) {
 
-				object.scale.multiplyScalar( 20 );
-                                object.position.set(10,0,10);
+				object.scale.set( 20,20,13 );
                                 object.rotation.x = ( - Math.PI / 2 ) ;
+                                var Material = new THREE.MeshFaceMaterial( Array );
+                                object.material = Material;
+                                object.position.x = Math.floor( Math.random() * 20 - 10 ) * 20;
+                                object.position.z = Math.floor( Math.random() * 20 - 10 ) * 20;
+                                
 				scene.add( object );
 
 			}, onProgress, onError );
-
+                    }        
                                 
+                                 
                                  
                                  
 				// Objects Trees Dummy
@@ -425,7 +439,7 @@
                                         mesh.add(changeColor);
                                                 
                                                                                  
-                                        for(var i=0;i<100;i++){
+                                        for(var i=0;i<1;i++){
                                         meshClone = mesh.clone();
                                         meshClone.position.x = Math.floor( Math.random() * 20 - 10 ) * 20;
                                         meshClone.position.z = Math.floor( Math.random() * 20 - 10 ) * 20;
@@ -665,7 +679,7 @@
                                                     controls.getObject().position.z = 0;
                                                            
                                                 }
-                                                
+                                              
                                             
                                               					prevTime = time;
                                         
