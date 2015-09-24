@@ -516,12 +516,14 @@
 			        
                             scene.add( moon );
 		
+                
+                //Wasser
                                 waterNormals = new THREE.ImageUtils.loadTexture( 'waternormals.jpg' );
 				waterNormals.wrapS = waterNormals.wrapT = THREE.RepeatWrapping;
 
 				water = new THREE.Water( renderer, camera, scene, {
-					textureWidth: 512,
-					textureHeight: 512,
+					textureWidth: 312,
+					textureHeight: 312,
 					waterNormals: waterNormals,
 					alpha: 	1.0,
 					moonDirection: directionalLight.position.clone().normalize(),
@@ -532,7 +534,7 @@
 
 
 				mirrorMesh = new THREE.Mesh(
-					new THREE.PlaneBufferGeometry( 1000, 1000, 1, 1 ),
+					new THREE.PlaneBufferGeometry( 200, 200, 1, 1 ),
 					water.material
 				);
 
@@ -842,7 +844,8 @@
                                                     controls.getObject().position.z = 0;
                                                          
                                                 }
-                                                
+                                                water.material.uniforms.time.value += 1.0 / 60.0;
+                                                water.render();
                                             
                                               					prevTime = time;
                                         
@@ -852,17 +855,16 @@
                                 moon.rotation.x += 0.0009;
                              //  frontMirror.renderWithMirror(backMirror);
                              //   backMirror.renderWithMirror(frontMirror);
-                     
+                
                          //    mesh.rotation.y += 0.01;
                          //    mesh.position.y = Math.sin( time ) * 5 + 2;
-                             water.material.uniforms.time.value += 1.0 / 60.0;
-                             water.render();
+                             
                             
            //audio 2.variante:  
                                 
 			//	sound2.update( camera );
                           //    sound1.update( camera ); 
-				renderer.render( scene, camera); //frontMirror, backMirror );
+				renderer.render( scene, camera); 
 
 			
                              
