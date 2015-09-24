@@ -27,11 +27,16 @@
                 <script src='https://raw.githubusercontent.com/jeromeetienne/threex.grassground/master/threex.grassground.js'></script>
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
                 <script src="https://mirror-three-js.googlecode.com/git/FlatMirror.js"></script>
+                <script src="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/js/loaders/AssimpJSONLoader.js"></script>
+                <script src="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/js/loaders/DDSLoader.js"></script>
+                <script src="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/js/loaders/MTLLoader.js"></script>
+                <script src="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/js/loaders/OBJMTLLoader.js"></script>
 		
                 
-                <script src="js/controls/OrbitControls.js"></script>
-		<script src="js/Mirror.js"></script>
-		<script src="js/WaterShader.js"></script>
+             
+		<script src="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/js/Mirror.js"></script>
+		<script src="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/js/WaterShader.js"></script>
+                
 
 		<script src="js/Detector.js"></script>
 		
@@ -58,10 +63,12 @@
                         var meshClone;
 			var raycaster;
                         var skyBox;
-                        var frontMirror;
-                        var backMirror;
-
-			
+                       // var frontMirror;
+                       // var backMirror;
+                        var mesh;
+ 			var material_sphere1, material_sphere2;
+			var sound1, sound2; // für audio 2.variante
+                        var waterNormals;
 
 		
 			var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
@@ -148,7 +155,7 @@
 			var moveRight = false;
                         var prevTime = performance.now();
 			var velocity = new THREE.Vector3();
-                        var sound1, sound2; // für audio 2.variante
+                        
                        
                        /* //audio 2. Variante
                         
@@ -198,23 +205,64 @@
 
 				scene = new THREE.Scene();
 
-                                 // white spotlight shining from the side, casting shadow
 
-                            var spotLight = new THREE.SpotLight( 0xffffff );
-                            spotLight.position.set( 20, 500, 50 );
+                            // directionlLight -> Richtung Mondlicht °°°
+                            var directionalLight = new THREE.DirectionalLight( 0xffffff );
+                            directionalLight.position.set( 20, 500, 50 );
 
-                            spotLight.castShadow = true;
+                            directionalLight.castShadow = true;
 
-                            spotLight.shadowMapWidth = 1024;
-                            spotLight.shadowMapHeight = 1024;
+                            directionalLight.shadowMapWidth = 1024;
+                            directionalLight.shadowMapHeight = 1024;
 
 
-                            spotLight.shadowCameraNear = 500;
-                            spotLight.shadowCameraFar = 5000;
-                            spotLight.shadowCameraFov = 30;
-                            spotLight.shadowDarkness = 0.8;
+                            directionalLight.shadowCameraNear = 500;
+                            directionalLight.shadowCameraFar = 5000;
+                            directionalLight.shadowCameraFov = 30;
+                            directionalLight.shadowDarkness = 0.8;
+                            
+                               
+                            scene.add( directionalLight );
+                            
+                 /*            // Shadow °° bitte die function immer so wie in zeile 179 schreiben,dann funktioiert auch alles. Jetzt kann die function mit "Bezeichner"(); aufgerufen werden. MfG Lucas
+                                var initShadowMapViewers = function() {
 
-                            scene.add( spotLight );
+				dirLightShadowMapViewer = new THREE.ShadowMapViewer( dirLight );
+				dirLightShadowMapViewer.position.x = 10;
+				dirLightShadowMapViewer.position.y = 10;
+				dirLightShadowMapViewer.size.width = 256;
+				dirLightShadowMapViewer.size.height = 256;
+				dirLightShadowMapViewer.update();
+                                
+				spotLightShadowMapViewer = new THREE.ShadowMapViewer( spotLight );
+				spotLightShadowMapViewer.size.set( 256, 256 );
+				spotLightShadowMapViewer.position.set( 276, 10 );
+				// spotLightShadowMapViewer.update();
+                           };
+                 */ 
+                                /*function renderShadowMapViewers() { //-> shadowMap°°
+
+				dirLightShadowMapViewer.render( renderer );
+				spotLightShadowMapViewer.render( renderer );
+                                }
+
+                                function render() {
+
+				var delta = clock.getDelta();
+
+				renderScene();
+				renderShadowMapViewers();
+
+				torusKnot.rotation.x += 0.25 * delta;
+				torusKnot.rotation.y += 2 * delta;
+				torusKnot.rotation.z += 1 * delta;
+
+				cube.rotation.x += 0.25 * delta;
+				cube.rotation.y += 2 * delta;
+				cube.rotation.z += 1 * delta;
+                                }*/
+                            
+                            
 				
 				controls = new THREE.PointerLockControls( camera );
 				scene.add( controls.getObject() );
@@ -279,38 +327,54 @@
 					}
 
 				};
-
-				document.addEventListener( 'keydown', onKeyDown);
+                                
+                              	document.addEventListener( 'keydown', onKeyDown);
 				document.addEventListener( 'keyup', onKeyUp);
 
 				raycaster = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, - 1, 0 ), 0,10);
 
-				// floor
-                              
-                                var textureFloor = new THREE.ImageUtils.loadTexture( "ground.jpg" );                             
-                                var materialFloor = new THREE.MeshBasicMaterial( {  map :  textureFloor });
-                                
-                                geometry = new THREE.PlaneGeometry( 2000, 2000, 100,100);
-				geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
-                                for ( var i = 0, l = geometry.vertices.length; i < l; i ++ ) {
 
-					var vertex = geometry.vertices[ i ];
+				// floor
+                                                          
+                                 var materialarray=[];   
+                                 var textureFloor = new THREE.ImageUtils.loadTexture( "grass_ground.jpg" ); 
+                                 var materialFloor = new THREE.MeshBasicMaterial({ map:textureFloor, side:THREE.DoubleSide});
+                                 var geometryFloor = new THREE.PlaneGeometry( 2000, 2000, 20,20);
+                                geometryFloor.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
+        
+                                for ( var i = 0, l = geometryFloor.vertices.length; i < l; i ++ ) {
+
+					var vertex = geometryFloor.vertices[ i ];
 					vertex.x += Math.random() * 20 - 10;
 					vertex.z += Math.random() * 20 - 10;
+                                        vertex.y += Math.random()*20 -10;
 
-				}
-                               
-				for ( var i = 0, l = geometry.faces.length; i < l; i ++ ) {
-
-					var face = geometry.faces[ i ];
-					face.vertexColors[ 0 ] = new THREE.Color(textureFloor );
-					face.vertexColors[ 1 ] = new THREE.Color(textureFloor);
-					face.vertexColors[ 2 ] = new THREE.Color(textureFloor );
-                                       
-				}
-                             mesh = new THREE.Mesh( geometry, materialFloor);
-				scene.add( mesh );
-                                
+                                        }
+        
+                                geometryFloor.faceVertexUvs[0] = [];
+                                for(var i = 0; i < geometryFloor.faces.length; i++){      
+                     
+                                geometryFloor.faceVertexUvs[0].push([
+						new THREE.Vector2( 0,0 ),
+						new THREE.Vector2( 0,1 ),
+						new THREE.Vector2( 1,1),    
+					        new THREE.Vector2( 1,0)    
+						]);
+                     
+                     
+                                geometryFloor.faces[i].materialIndex = i;
+                                materialarray.push(materialFloor);
+                                }    
+                 
+                                geometryFloor.computeFaceNormals();
+                                geometryFloor.dynamic = true;
+                                geometryFloor.uvsNeedUpdate = true;	    
+      
+                                var meshFloor = new THREE.Mesh( geometryFloor,new THREE.MeshFaceMaterial(materialarray) );
+                                scene.add(meshFloor);
+ 
+ 
+ 
                                  //object sphere      
                                  geometry = new THREE.SphereGeometry( 10, 20, 10 );
                                  material = new THREE.MeshBasicMaterial({color:0xFF00FF});
@@ -320,9 +384,36 @@
                                  sphere.position.y = 5;
                                  scene.add(sphere);
                                  
+                                 //object Tree
+                                 
+                                
+                                var onProgress = function ( xhr ) {
+				if ( xhr.lengthComputable ) {
+					var percentComplete = xhr.loaded / xhr.total * 100;
+					console.log( Math.round(percentComplete, 2) + '% downloaded' );
+				}
+			};
+
+			var onError = function ( xhr ) {
+			};
+                        
+                       
+
+			
+			var loader1 = new THREE.AssimpJSONLoader();
+			loader1.load( 'ChristmasTree.json', function ( object ) {
+
+				object.scale.multiplyScalar( 20 );
+                                object.position.set(10,0,10);
+                                object.rotation.x = ( - Math.PI / 2 ) ;
+				scene.add( object );
+
+			}, onProgress, onError );
+
+                                
                                  
                                  
-				// Objects Trees
+				// Objects Trees Dummy
 
 				geometry = new THREE.BoxGeometry( 10, 50, 10 );
 
@@ -378,7 +469,7 @@
                                         mesh.add(color);
                                         mesh.add(changeColor);
                                                 
-                                                                                   
+                                                                                 
                                         for(var i=0;i<100;i++){
                                         meshClone = mesh.clone();
                                         meshClone.position.x = Math.floor( Math.random() * 20 - 10 ) * 20;
@@ -392,7 +483,8 @@
                                         scene.add(meshClone);
                                         objects.push( meshClone );
                                         }
-                                        
+                              
+            
                      //skybox
                                                                                                                                                            
 		var position  = ["purplenebula_back.jpg", "purplenebula_top.jpg", "purplenebula_back.jpg", "purplenebula_left.jpg", "purplenebula_top.jpg", "purplenebula_top.jpg"];
@@ -415,16 +507,43 @@
                   
                     scene.add( skyBox );
                     
-                       
-                        //Mond        
-                        var moonTex = THREE.ImageUtils.loadTexture( 'moon_global.jpg' );
-                      //  var moonMaterial = new THREE.MeshLambertMaterial( { map: moonTex, side: THREE.DoubleSide } );
-			moonMaterial = new THREE.MeshBasicMaterial({ map: moonTex });
-                        moon = new THREE.Mesh( new THREE.SphereGeometry( 100, 100, 10 ), moonMaterial );
-                        moon.position.set( 300, 600, 250 );
+                                 
+           //Mond        
+            var moonTex = THREE.ImageUtils.loadTexture( 'moon_global.jpg' );
+            moonMaterial = new THREE.MeshBasicMaterial({ map: moonTex });
+            moon = new THREE.Mesh( new THREE.SphereGeometry( 75, 75, 75 ), moonMaterial );
+            moon.position.set( 300, 600, 250 );
 			        
                             scene.add( moon );
 		
+                                waterNormals = new THREE.ImageUtils.loadTexture( 'waternormals.jpg' );
+				waterNormals.wrapS = waterNormals.wrapT = THREE.RepeatWrapping;
+
+				water = new THREE.Water( renderer, camera, scene, {
+					textureWidth: 512,
+					textureHeight: 512,
+					waterNormals: waterNormals,
+					alpha: 	1.0,
+					moonDirection: directionalLight.position.clone().normalize(),
+					moonColor: 0xffffff,
+					waterColor: 0x001e0f,
+					distortionScale: 50.0 
+				} );
+
+
+				mirrorMesh = new THREE.Mesh(
+					new THREE.PlaneBufferGeometry( 1000, 1000, 1, 1 ),
+					water.material
+				);
+
+				mirrorMesh.add( water );
+				mirrorMesh.rotation.x = - Math.PI * 0.5;
+				scene.add( mirrorMesh );
+
+
+
+
+
      /*           
                 //MIRORR planes
     frontMirror = new THREE.FlatMirror(renderer, controls.getObject(), {clipBias: 0.003, textureWidth: 800, textureHeight: 600} );
@@ -508,6 +627,7 @@
 				mirrorMesh.rotation.x = - Math.PI * 0.5;
 				scene.add( mirrorMesh );
                                 */
+
                                 
             
             
@@ -586,20 +706,27 @@
                     //audio 2. variante
                     // sound spheres
 
-				var s = 1;
+			/*	var listener = new THREE.AudioListener();
+                                camera.add( listener );
 
-				var mesh1 = new THREE.Mesh( sphere, material_sphere1 );
-				mesh1.position.set( -250, 30, 0 );
-				mesh1.scale.set( s, s, s );
-				scene.add( mesh1 );
+				material_sphere1 = new THREE.Mesh( new THREE.SphereGeometry( 10, 20, 10 ),new THREE.MeshBasicMaterial({ color:0xEE0000 }) );
+				material_sphere1.position.set( 20, 15, 50 );
+				material_sphere1.scale.set( 1, 1, 1 );
+				scene.add( material_sphere1 );
 
-				sound1 = new Sound( [ 'sounds/358232_j_s_song.mp3', 'sounds/358232_j_s_song.ogg' ], 275, 1 );
-				sound1.position.copy( mesh1.position );
-				sound1.play();
-
-				//
-
-				var mesh2 = new THREE.Mesh( sphere, material_sphere2 );
+				//sound1 = new Sound( [ 'Grillen.mp3' ]);
+				//sound1.position.copy( material_sphere1.position );
+				//sound1.play();
+                               // sound.source.loop = true;
+                               	sound1 = new THREE.Audio( listener );
+				sound1.load( 'Grillen.m4A' );
+				//sound1.setRefDistance( 20 );
+                                sound1.position.copy( material_sphere1.position );
+				sound1.autoplay = true;
+                                                            
+			*/	//
+                              /*
+				var mesh2 = new THREE.Mesh( sphere );
 				mesh2.position.set( 250, 30, 0 );
 				mesh2.scale.set( s, s, s );
 				scene.add( mesh2 );
@@ -607,7 +734,8 @@
 				sound2 = new Sound( [ 'sounds/376737_Skullbeatz___Bad_Cat_Maste.mp3', 'sounds/376737_Skullbeatz___Bad_Cat_Maste.ogg' ], 275, 1 );
 				sound2.position.copy( mesh2.position );
 				sound2.play();
-                    
+                    */
+
 				
                                 renderer = new THREE.WebGLRenderer();
 				renderer.setPixelRatio( window.devicePixelRatio );
@@ -669,10 +797,10 @@
 					controls.getObject().translateY( velocity.y * delta );
 					controls.getObject().translateZ( velocity.z * delta );
 
-					if ( controls.getObject().position.y < 10 ) {
+					if ( controls.getObject().position.y < 15 ) {
 
 						velocity.y = 0;
-						controls.getObject().position.y = 10;
+						controls.getObject().position.y = 15;
 
 						canJump = true;
 
@@ -710,9 +838,9 @@
                                                 
                                                 if (nearSkyX === true || nearSkyZ === true)
                                                 {
-                                                    controls.getObject().position.x=0;
-                                                    controls.getObject().position.z=0;
-                                                           
+                                                    controls.getObject().position.x = 0;
+                                                    controls.getObject().position.z = 0;
+                                                         
                                                 }
                                                 
                                             
@@ -721,13 +849,21 @@
 				}  
                                  
                                 skyBox.rotation.x += 0.0003;
-                              //  frontMirror.renderWithMirror(backMirror);
+                                moon.rotation.x += 0.0009;
+                             //  frontMirror.renderWithMirror(backMirror);
                              //   backMirror.renderWithMirror(frontMirror);
+                     
+                         //    mesh.rotation.y += 0.01;
+                         //    mesh.position.y = Math.sin( time ) * 5 + 2;
+                             water.material.uniforms.time.value += 1.0 / 60.0;
+                             water.render();
                             
-           /*audio 2.variante:  sound1.update( camera );
-				sound2.update( camera );
-                             */
+           //audio 2.variante:  
+                                
+			//	sound2.update( camera );
+                          //    sound1.update( camera ); 
 				renderer.render( scene, camera); //frontMirror, backMirror );
+
 			
                              
                                 
