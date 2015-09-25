@@ -59,9 +59,18 @@
                         var meshClone;
 			var raycaster;
                         var skyBox;
-			var material_sphere1, material_sphere2;
+			//var material_sphere1, material_sphere2;
 			var sound1, sound2; // für audio 2.variante
                         var waterNormals;
+                        var parameters = {
+				width: 2000,
+				height: 2000,
+				widthSegments: 250,
+				heightSegments: 250,
+				depth: 1500,
+				param: 4,
+				filterparam: 1
+			};
 
 		
 			var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
@@ -158,6 +167,7 @@
 
                         var listener = new THREE.AudioListener();
                         camera.add( listener );
+                        
                             // directionlLight -> Richtung Mondlicht °°°
                             var directionalLight = new THREE.DirectionalLight( 0xffffff );
                             directionalLight.position.set( 20, 500, 50 );
@@ -169,7 +179,7 @@
 
 
                             directionalLight.shadowCameraNear = 500;
-                            directionalLight.shadowCameraFar = 500;
+                            directionalLight.shadowCameraFar = 5000;
                             directionalLight.shadowCameraFov = 30;
                             directionalLight.shadowDarkness = 0.8;
                             
@@ -319,8 +329,8 @@
                                 }    
                  
                                 geometryFloor.computeFaceNormals();
-                                geometryFloor.dynamic = true;
-                                geometryFloor.uvsNeedUpdate = true;	    
+                               // geometryFloor.dynamic = true;
+                               // geometryFloor.uvsNeedUpdate = true;	    
       
                                 var meshFloor = new THREE.Mesh( geometryFloor,new THREE.MeshFaceMaterial(materialarray) );
                                 scene.add(meshFloor);
@@ -494,7 +504,7 @@
      
             //Wasser
                                 
-                                waterNormals = new THREE.ImageUtils.loadTexture( 'waternormals.jpg' );
+                               /* waterNormals = new THREE.ImageUtils.loadTexture( 'waternormals.jpg' );
 				waterNormals.wrapS = waterNormals.wrapT = THREE.RepeatWrapping; 
 
 				water = new THREE.Water( renderer, camera, scene, {
@@ -510,15 +520,14 @@
 
 				
                                 mirrorMesh = new THREE.Mesh(
-					new THREE.PlaneBufferGeometry( 20, 20,1 ,1 ),
+					new THREE.PlaneBufferGeometry( parameters.width * 500, parameters.height * 500),
 					water.material
 				);
 
 				mirrorMesh.add( water );
 				mirrorMesh.rotation.x = - Math.PI * 0.5;
-                                mirrorMesh.position.y = 5;
-                                
-				scene.add( mirrorMesh );
+                                mirrorMesh.position.y = 5;*/
+				//scene.add( mirrorMesh );
                                 
 
                                 //audio
@@ -633,8 +642,8 @@
                                                            
                                                 }
                                               
-                                                    water.material.uniforms.time.value += 1.0 / 60.0;
-                                                    water.render();
+                                                    //water.material.uniforms.time.value += 1.0 / 60.0;
+                                                    //water.render();
                                               					prevTime = time;
                                         
 				}  
