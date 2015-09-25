@@ -148,7 +148,7 @@
 			var moveRight = false;
                         var prevTime = performance.now();
 			var velocity = new THREE.Vector3();
-                       
+                        
 
 			function init() {
                                 
@@ -156,7 +156,8 @@
 
 				scene = new THREE.Scene();
 
-
+                        var listener = new THREE.AudioListener();
+                        camera.add( listener );
                             // directionlLight -> Richtung Mondlicht °°°
                             var directionalLight = new THREE.DirectionalLight( 0xffffff );
                             directionalLight.position.set( 20, 500, 50 );
@@ -335,7 +336,11 @@
                                  sphere.position.y = 5;
                                  scene.add(sphere);
                                  
-                                 
+                                 var sound1 = new THREE.Audio (listener);
+                                 sound1.load("Lagerfeuer.ogg");
+                                 sound1.setRefDistance(20);
+                                 sound1.autoplay = true;
+                                 sphere.add(sound1);
                                  
                                  //object Tree
                                  
@@ -636,7 +641,7 @@
                                 skyBox.rotation.x += 0.0003;
                                 moon.rotation.x += 0.0009;
                              //  frontMirror.renderWithMirror(backMirror);
-                             //   backMirror.renderWithMirror(frontMirror);
+                            //   backMirror.renderWithMirror(frontMirror);
 				renderer.render( scene, camera); //frontMirror, backMirror );
 
 			
