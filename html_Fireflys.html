@@ -168,7 +168,7 @@
 
 
                             directionalLight.shadowCameraNear = 500;
-                            directionalLight.shadowCameraFar = 5000;
+                            directionalLight.shadowCameraFar = 500;
                             directionalLight.shadowCameraFov = 30;
                             directionalLight.shadowDarkness = 0.8;
                             
@@ -505,13 +505,14 @@
 
 				
                                 mirrorMesh = new THREE.Mesh(
-					new THREE.PlaneBufferGeometry( 500, 500,1 ,1 ),
+					new THREE.PlaneBufferGeometry( 20, 20,1 ,1 ),
 					water.material
 				);
 
 				mirrorMesh.add( water );
 				mirrorMesh.rotation.x = - Math.PI * 0.5;
                                 mirrorMesh.position.y = 5;
+                                
 				scene.add( mirrorMesh );
                                 
 
