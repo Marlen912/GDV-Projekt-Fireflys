@@ -60,7 +60,7 @@
 			var raycaster;
                         var skyBox;
 			//var material_sphere1, material_sphere2;
-			var sound1, sound2; // für audio 2.variante
+			var sound1, sound2, sound3;
                         var waterNormals;
                         var parameters = {
 				width: 2000,
@@ -345,11 +345,7 @@
                                  sphere.position.y = 5;
                                  scene.add(sphere);
                                  
-                                 var sound1 = new THREE.Audio (listener);
-                                 sound1.load("Lagerfeuer.ogg");
-                                 sound1.setRefDistance(20);
-                                 sound1.autoplay = true;
-                                 sphere.add(sound1);
+                                 
                                  
                                  //object Tree
                                  
@@ -417,9 +413,9 @@
                                         mesh.position.set(50,25,60);
                                          var Color = function (){
                                          this.changeTrue=function(){ for(var i=0;i<objects.length;i++)
-                                         this.dispatchEvent({type:'change',message: objects[i].material.color.setHSL(0,0,0) + objects[i].translateX(15) });};
+                                         this.dispatchEvent({type:'change',message: sound2.play() });};
                                          this.changeFalse = function(){
-                                         this.dispatchEvent({type:'change',message: mesh.material.color.setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75 )});};
+                                         this.dispatchEvent({type:'change',message: colorStatus = true });};
                                         };
             
                                         EventDispatcher.prototype.apply( Color.prototype );
@@ -449,7 +445,7 @@
 					mesh.add(Color);
                                         mesh.add(color);
                                         mesh.add(changeColor);
-                                                
+                                        document.addEventListener('keydown',changeColor);       
                                                                                  
                                         for(var i=0;i<1;i++){
                                         meshClone = mesh.clone();
@@ -531,9 +527,23 @@
 
                                 //audio
                                 
+                                 sound1 = new THREE.Audio (listener);
+                                 sound1.load("Grillen.ogg");
+                                 sound1.autoplay = true;
+                                 sound1.loop = true;
+                                 scene.add(sound1);
+                                 //loop fehlt
                                 
+                                 sound2 = new THREE.Audio (listener);
+                                 sound2.load("Eule2.ogg");
+                                 sound2.autoplay = false;
+                                 scene.add(sound2);
                                 
-                                
+                                 sound3 = new THREE.Audio (listener);
+                                 sound3.load("Lagerfeuer.ogg");
+                                 sound3.autoplay = true;
+                               // lauter und loop
+                                 sphere.add(sound3);
 				
                                 renderer = new THREE.WebGLRenderer();
 				renderer.setPixelRatio( window.devicePixelRatio );
@@ -618,7 +628,7 @@
                                              
                                              
                                             
-                                                
+                                             /*   
                                                 var nearSphereX = (controls.getObject().position.x < (sphere.position.x+ 50)) && (controls.getObject().position.x > (sphere.position.x- 50));
                                                 var nearSphereZ = (controls.getObject().position.z < (sphere.position.z+ 50)) && (controls.getObject().position.z > (sphere.position.z- 50));
                                                 
@@ -630,7 +640,7 @@
                                                 {
                                                     document.removeEventListener('keydown',changeColor);
                                                 }
-                                                
+                                              */  
                                                 var nearSkyX = (controls.getObject().position.x > (skyBox.position.x + 200)|| controls.getObject().position.x < (skyBox.position.x - 200));
                                                 var nearSkyZ = (controls.getObject().position.z > (skyBox.position.z + 200)|| controls.getObject().position.z < (skyBox.position.z - 200));
                                                 
