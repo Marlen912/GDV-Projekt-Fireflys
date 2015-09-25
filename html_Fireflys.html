@@ -28,14 +28,10 @@
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
                 <script src="https://mirror-three-js.googlecode.com/git/FlatMirror.js"></script>
                 <script src="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/js/loaders/AssimpJSONLoader.js"></script>
-                <script src="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/js/loaders/DDSLoader.js"></script>
-                <script src="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/js/loaders/MTLLoader.js"></script>
-                <script src="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/js/loaders/OBJMTLLoader.js"></script>
-		
-                
-             
+
 		<script src="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/js/Mirror.js"></script>
 		<script src="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/js/WaterShader.js"></script>
+                
                 
 
 		<script src="js/Detector.js"></script>
@@ -63,10 +59,7 @@
                         var meshClone;
 			var raycaster;
                         var skyBox;
-                       // var frontMirror;
-                       // var backMirror;
-                        var mesh;
- 			var material_sphere1, material_sphere2;
+			var material_sphere1, material_sphere2;
 			var sound1, sound2; // für audio 2.variante
                         var waterNormals;
 
@@ -155,49 +148,7 @@
 			var moveRight = false;
                         var prevTime = performance.now();
 			var velocity = new THREE.Vector3();
-                        
                        
-                       /* //audio 2. Variante
-                        
-                            var Sound = function ( sources, radius, volume ) {
-
-				var audio = document.createElement( 'audio' );
-
-				for ( var i = 0; i < sources.length; i ++ ) {
-
-					var source = document.createElement( 'source' );
-					source.src = sources[ i ];
-
-					audio.appendChild( source );
-
-				}
-
-				this.position = new THREE.Vector3();
-
-				this.play = function () {
-
-					audio.play();
-
-				}
-
-				this.update = function ( camera ) {
-
-					var distance = this.position.distanceTo( camera.position );
-
-					if ( distance <= radius ) {
-
-						audio.volume = volume * ( 1 - distance / radius );
-
-					} else {
-
-						audio.volume = 0;
-
-					}
-
-				}
-
-			}
-                        */
 
 			function init() {
                                 
@@ -224,7 +175,7 @@
                                
                             scene.add( directionalLight );
                             
-                 /*            // Shadow °° bitte die function immer so wie in zeile 179 schreiben,dann funktioiert auch alles. Jetzt kann die function mit "Bezeichner"(); aufgerufen werden. MfG Lucas
+                             // Shadow °° bitte die function immer so wie in zeile 179 schreiben,dann funktioiert auch alles. Jetzt kann die function mit "Bezeichner"(); aufgerufen werden. MfG Lucas
                                 var initShadowMapViewers = function() {
 
 				dirLightShadowMapViewer = new THREE.ShadowMapViewer( dirLight );
@@ -238,8 +189,8 @@
 				spotLightShadowMapViewer.size.set( 256, 256 );
 				spotLightShadowMapViewer.position.set( 276, 10 );
 				// spotLightShadowMapViewer.update();
-                           };
-                 */ 
+                            };
+
                                 /*function renderShadowMapViewers() { //-> shadowMap°°
 
 				dirLightShadowMapViewer.render( renderer );
@@ -384,33 +335,49 @@
                                  sphere.position.y = 5;
                                  scene.add(sphere);
                                  
+                                 
+                                 
                                  //object Tree
                                  
                                 
-                                var onProgress = function ( xhr ) {
-				if ( xhr.lengthComputable ) {
-					var percentComplete = xhr.loaded / xhr.total * 100;
-					console.log( Math.round(percentComplete, 2) + '% downloaded' );
+                         var onProgress = function ( xhr ) {
+                            if ( xhr.lengthComputable ) {
+				var percentComplete = xhr.loaded / xhr.total * 100;
+				console.log( Math.round(percentComplete, 2) + '% downloaded' );
 				}
 			};
 
 			var onError = function ( xhr ) {
 			};
                         
-                       
-
-			
+                        
+                        var texture = ['bark_loo.jpg','blatt1.jpg','blatt1_a.jpg'];
+                        var Array= [];
+                        for(var i =0;i<texture.length;i++){
+                              var Texture= new THREE.ImageUtils.loadTexture(texture[i]);
+                              var material = new THREE.MeshBasicMaterial({ map:Texture, side:THREE.BackSide});
+                            Array.push( material);
+                            }
+                            
+                            
+                        for(var i=0;i<10;i++)
+                        {
 			var loader1 = new THREE.AssimpJSONLoader();
-			loader1.load( 'ChristmasTree.json', function ( object ) {
+			loader1.load( 'Tree1.json', function ( object ) {
 
-				object.scale.multiplyScalar( 20 );
-                                object.position.set(10,0,10);
+				object.scale.set( 20,20,13 );
                                 object.rotation.x = ( - Math.PI / 2 ) ;
+                                var Material = new THREE.MeshFaceMaterial( Array );
+                                object.material = Material;
+                                object.position.x = Math.floor( Math.random() * 20 - 10 ) * 20;
+                                object.position.z = Math.floor( Math.random() * 20 - 10 ) * 20;
+                                
 				scene.add( object );
 
 			}, onProgress, onError );
-
+                    }        
                                 
+                                 
                                  
                                  
 				// Objects Trees Dummy
@@ -470,7 +437,7 @@
                                         mesh.add(changeColor);
                                                 
                                                                                  
-                                        for(var i=0;i<100;i++){
+                                        for(var i=0;i<1;i++){
                                         meshClone = mesh.clone();
                                         meshClone.position.x = Math.floor( Math.random() * 20 - 10 ) * 20;
                                         meshClone.position.z = Math.floor( Math.random() * 20 - 10 ) * 20;
@@ -505,149 +472,54 @@
                 skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
                 
                   
+                    
                     scene.add( skyBox );
                     
                                  
            //Mond        
             var moonTex = THREE.ImageUtils.loadTexture( 'moon_global.jpg' );
+           //  var moonMaterial = new THREE.MeshLambertMaterial( { map: moonTex, side: THREE.DoubleSide } );
             moonMaterial = new THREE.MeshBasicMaterial({ map: moonTex });
             moon = new THREE.Mesh( new THREE.SphereGeometry( 75, 75, 75 ), moonMaterial );
             moon.position.set( 300, 600, 250 );
 			        
                             scene.add( moon );
 		
-                
-                //Wasser
+
+     
+            //Wasser
+                                
                                 waterNormals = new THREE.ImageUtils.loadTexture( 'waternormals.jpg' );
-				waterNormals.wrapS = waterNormals.wrapT = THREE.RepeatWrapping;
+				waterNormals.wrapS = waterNormals.wrapT = THREE.RepeatWrapping; 
 
 				water = new THREE.Water( renderer, camera, scene, {
-					textureWidth: 312,
-					textureHeight: 312,
+					textureWidth: 512, 
+					textureHeight: 512,
 					waterNormals: waterNormals,
 					alpha: 	1.0,
 					moonDirection: directionalLight.position.clone().normalize(),
 					moonColor: 0xffffff,
 					waterColor: 0x001e0f,
-					distortionScale: 50.0 
+					distortionScale: 50.0
 				} );
 
-
-				mirrorMesh = new THREE.Mesh(
-					new THREE.PlaneBufferGeometry( 200, 200, 1, 1 ),
+				
+                                mirrorMesh = new THREE.Mesh(
+					new THREE.PlaneBufferGeometry( 500, 500,1 ,1 ),
 					water.material
 				);
 
 				mirrorMesh.add( water );
 				mirrorMesh.rotation.x = - Math.PI * 0.5;
+                                mirrorMesh.position.y = 5;
 				scene.add( mirrorMesh );
-
-
-                          //audio 1. Variante
-                          /*     if (!AudioContext) {
-                            throw new Error("AudioContext not supported!");
-                          } 
-
-                          // Create a new audio context.
-                          var ctx = new AudioContext();
-
-                          // Create a AudioGainNode to control the main volume.
-                          var mainVolume = ctx.createGain();
-                          // Connect the main volume node to the context destination.
-                          mainVolume.connect(ctx.destination);
-
-                          // Create an object with a sound source and a volume control.
-                          var sound = {};
-                          sound.source = ctx.createBufferSource();
-                          sound.volume = ctx.createGain();
-
-                          // Connect the sound source to the volume control.
-                          sound.source.connect(sound.volume);
-                          // Hook up the sound volume control to the main volume.
-                          sound.volume.connect(mainVolume);
-
-                          // Make the sound source loop.
-                          sound.source.loop = true;
-
-                          // Load a sound file using an ArrayBuffer XMLHttpRequest.
-                          var request = new XMLHttpRequest();
-                          request.open("GET", soundFileName, true);
-                          request.responseType = "arraybuffer";
-                          request.onload = function(e) {
-
-                            // Create a buffer from the response ArrayBuffer.
-                            ctx.decodeAudioData(this.response, function onSuccess(buffer) {
-                              sound.buffer = buffer;
-
-                              // Make the sound source use the buffer and start playing it.
-                              sound.source.buffer = sound.buffer;
-                              sound.source.start(ctx.currentTime);
-                            }, function onFailure() {
-                              alert("Decoding the audio buffer failed");
-                            });
-                          };
-                          request.send();
                                 
-                     //position  
-                          sound.panner = ctx.createPanner();
-                    // Instead of hooking up the volume to the main volume, hook it up to the panner.
-                    sound.volume.connect(sound.panner);
-                    // And hook up the panner to the main volume.
-                    sound.panner.connect(mainVolume);  
-                    
-                    
-                    // In the frame handler function, get the object's position.
-                    object.position.set(newX, newY, newZ);
-                    object.updateMatrixWorld();
-                    var p = new THREE.Vector3();
-                    p.setFromMatrixPosition(object.matrixWorld);
 
-                    // And copy the position over to the sound of the object.
-                    sound.panner.setPosition(p.x, p.y, p.z);
-                    
-                    // Get the camera position.
-                    camera.position.set(newX, newY, newZ);
-                    camera.updateMatrixWorld();
-                    var p = new THREE.Vector3();
-                    p.setFromMatrixPosition(camera.matrixWorld);
-
-                    // And copy the position over to the listener.
-                    ctx.listener.setPosition(p.x, p.y, p.z);
-                    */
-         
-                    //audio 2. variante
-                    // sound spheres
-
-			/*	var listener = new THREE.AudioListener();
-                                camera.add( listener );
-
-				material_sphere1 = new THREE.Mesh( new THREE.SphereGeometry( 10, 20, 10 ),new THREE.MeshBasicMaterial({ color:0xEE0000 }) );
-				material_sphere1.position.set( 20, 15, 50 );
-				material_sphere1.scale.set( 1, 1, 1 );
-				scene.add( material_sphere1 );
-
-				//sound1 = new Sound( [ 'Grillen.mp3' ]);
-				//sound1.position.copy( material_sphere1.position );
-				//sound1.play();
-                               // sound.source.loop = true;
-                               	sound1 = new THREE.Audio( listener );
-				sound1.load( 'Grillen.m4A' );
-				//sound1.setRefDistance( 20 );
-                                sound1.position.copy( material_sphere1.position );
-				sound1.autoplay = true;
-                                                            
-			*/	//
-                              /*
-				var mesh2 = new THREE.Mesh( sphere );
-				mesh2.position.set( 250, 30, 0 );
-				mesh2.scale.set( s, s, s );
-				scene.add( mesh2 );
-
-				sound2 = new Sound( [ 'sounds/376737_Skullbeatz___Bad_Cat_Maste.mp3', 'sounds/376737_Skullbeatz___Bad_Cat_Maste.ogg' ], 275, 1 );
-				sound2.position.copy( mesh2.position );
-				sound2.play();
-                    */
-
+                                //audio
+                                
+                                
+                                
+                                
 				
                                 renderer = new THREE.WebGLRenderer();
 				renderer.setPixelRatio( window.devicePixelRatio );
@@ -752,11 +624,11 @@
                                                 {
                                                     controls.getObject().position.x = 0;
                                                     controls.getObject().position.z = 0;
-                                                         
+                                                           
                                                 }
-                                                water.material.uniforms.time.value += 1.0 / 60.0;
-                                                water.render();
-                                            
+                                              
+                                                    water.material.uniforms.time.value += 1.0 / 60.0;
+                                                    water.render();
                                               					prevTime = time;
                                         
 				}  
@@ -765,16 +637,7 @@
                                 moon.rotation.x += 0.0009;
                              //  frontMirror.renderWithMirror(backMirror);
                              //   backMirror.renderWithMirror(frontMirror);
-                
-                         //    mesh.rotation.y += 0.01;
-                         //    mesh.position.y = Math.sin( time ) * 5 + 2;
-                             
-                            
-           //audio 2.variante:  
-                                
-			//	sound2.update( camera );
-                          //    sound1.update( camera ); 
-				renderer.render( scene, camera); 
+				renderer.render( scene, camera); //frontMirror, backMirror );
 
 			
                              
