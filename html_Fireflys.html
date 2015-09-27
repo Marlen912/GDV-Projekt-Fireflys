@@ -34,9 +34,7 @@
                 
                 
 
-		<script src="js/Detector.js"></script>
 		
-                <script src="js/libs/stats.min.js"></script>
 		<div id="position">
                 <span >Current Position: </span>
                 </div>  
@@ -49,7 +47,7 @@
 		<script>
                 /* global THREE */
                 /* global EventDispatcher */
-                /* global THREEx */
+                
 			var camera, scene, renderer;
 			var geometry, material, mesh;
 			var controls;
@@ -165,8 +163,13 @@
 
 				scene = new THREE.Scene();
 
-                        var listener = new THREE.AudioListener();
-                        camera.add( listener );
+                                var listener = new THREE.AudioListener();
+                                camera.add( listener );
+                                
+                                renderer = new THREE.WebGLRenderer();
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+                                document.body.appendChild( renderer.domElement );
                         
                             // directionlLight -> Richtung Mondlicht °°°
                             var directionalLight = new THREE.DirectionalLight( 0xffffff );
@@ -362,26 +365,22 @@
 			};
                         
                         
-                        var texture = ['bark_loo.jpg','blatt1.jpg','blatt1_a.jpg'];
-                        var Array= [];
-                        for(var i =0;i<texture.length;i++){
-                              var Texture= new THREE.ImageUtils.loadTexture(texture[i]);
-                              var material = new THREE.MeshBasicMaterial({ map:Texture, side:THREE.BackSide});
-                            Array.push( material);
-                            }
                             
-                            
-                        for(var i=0;i<10;i++)
+                        for(var i=0;i<70;i++)
                         {
 			var loader1 = new THREE.AssimpJSONLoader();
-			loader1.load( 'Tree1.json', function ( object ) {
+			loader1.load( 'lowpolytree.json', function ( object ) {
 
-				object.scale.set( 20,20,13 );
+				object.scale.set( 20,20,20 );
                                 object.rotation.x = ( - Math.PI / 2 ) ;
-                                var Material = new THREE.MeshFaceMaterial( Array );
-                                object.material = Material;
                                 object.position.x = Math.floor( Math.random() * 20 - 10 ) * 20;
                                 object.position.z = Math.floor( Math.random() * 20 - 10 ) * 20;
+                                if((object.position.x < (sphere.position.x+10)&& object.position.x >(sphere.position.x-10))||(object.position.z < (sphere.position.z+10)&& object.position.z >(sphere.position.z-10)))
+                                        {
+                                        object.position.x = Math.floor( Math.random() * 20 - 10 ) * 20;
+                                        object.position.z = Math.floor( Math.random() * 20 - 10 ) * 20; 
+                                        }
+                                object.position.y = 35;
                                 
 				scene.add( object );
 
@@ -391,76 +390,43 @@
                                  
                                  
                                  
-				// Objects Trees Dummy
+				// Objects Tree Owl
 
-				geometry = new THREE.BoxGeometry( 10, 50, 10 );
-
-				for ( var i = 0, l = geometry.faces.length; i < l; i ++ ) {
-
-					var face = geometry.faces[ i ];
-					face.vertexColors[ 0 ] = new THREE.Color(0x8F4A1F);
-					face.vertexColors[ 1 ] = new THREE.Color(0xB85314);
-					face.vertexColors[ 2 ] = new THREE.Color(0xEC7429);
-
-				}
+				var geometry = new THREE.BoxGeometry( 10, 50, 10 );
+                                var Texture = new THREE.ImageUtils.loadTexture('bark_loo.jpg');
+				var material = new THREE.MeshBasicMaterial({ map:Texture, side:THREE.DoubleSide});
+                                var mesh = new THREE.Mesh( geometry, material );
+                                mesh.position.set(50,25,60);
                                 
-           				
-
-					material = new THREE.MeshPhongMaterial( { specular: 0xffffff, shading: THREE.FlatShading, vertexColors: THREE.VertexColors} );
-
-					var mesh = new THREE.Mesh( geometry, material );
-                                        
-					
-                                        mesh.position.set(50,25,60);
-                                         var Color = function (){
-                                         this.changeTrue=function(){ for(var i=0;i<objects.length;i++)
-                                         this.dispatchEvent({type:'change',message: sound2.play() });};
-                                         this.changeFalse = function(){
-                                         this.dispatchEvent({type:'change',message: colorStatus = true });};
-                                        };
-            
-                                        EventDispatcher.prototype.apply( Color.prototype );
+                                
+                                         var Owl = function (){
+                                         this.call =function(){ 
+                                         this.dispatchEvent({type:'call',message: sound2.play() });};};
+                                 
+                                         EventDispatcher.prototype.apply( Owl.prototype );
                                         // Using events
-                                        var color = new Color();
                                         
-                                        changeColor = function(event){
+                                        var owl = new Owl();
+                                        
+                                        callOwl = function(event){
                                         switch(event.keyCode)
                                          {
-                                             case 69:
-                                             if (colorStatus === true)
-                                             {    
-                                             color.changeTrue();
-                                             colorStatus = false;
+                                             case 69: //E
+                                             owl.call();
                                              break;
-                                             }
-                                            else
-                                            {
-                                              color.changeFalse();
-                                              colorStatus = true;
-                                              break;
-                                            }
+                                                                                         
                                          }
                                           };               
                                         
                                         
-					mesh.add(Color);
-                                        mesh.add(color);
-                                        mesh.add(changeColor);
-                                        document.addEventListener('keydown',changeColor);       
+					mesh.add(Owl);
+                                        mesh.add(owl);
+                                        mesh.add(callOwl);
+                                        document.addEventListener('keydown',callOwl);     
+                                        scene.add(mesh);
+                                        objects.push(mesh);
                                                                                  
-                                        for(var i=0;i<1;i++){
-                                        meshClone = mesh.clone();
-                                        meshClone.position.x = Math.floor( Math.random() * 20 - 10 ) * 20;
-                                        meshClone.position.z = Math.floor( Math.random() * 20 - 10 ) * 20;
-                                        if((meshClone.position.x < (sphere.position.x+10)&& meshClone.position.x >(sphere.position.x-10))||(meshClone.position.z < (sphere.position.x+10)&& meshClone.position.z >(sphere.position.x-10)))
-                                        {
-                                        meshClone.position.x = Math.floor( Math.random() * 20 - 10 ) * 20;
-                                        meshClone.position.z = Math.floor( Math.random() * 20 - 10 ) * 20; 
-                                        }
-                                        meshClone.position.y = 25;
-                                        scene.add(meshClone);
-                                        objects.push( meshClone );
-                                        }
+                                       
                               
             
                      //skybox
@@ -546,15 +512,8 @@
                                // lauter und loop
                                  sphere.add(sound3);
 				
-                                renderer = new THREE.WebGLRenderer();
-				renderer.setPixelRatio( window.devicePixelRatio );
-				renderer.setSize( window.innerWidth, window.innerHeight );
-                                document.body.appendChild( renderer.domElement );
                                 
-
-                                
-
-				window.addEventListener( 'resize', onWindowResize, false );
+                  		window.addEventListener( 'resize', onWindowResize, false );
 
 			}
 
@@ -642,6 +601,7 @@
                                                     document.removeEventListener('keydown',changeColor);
                                                 }
                                               */  
+                                             
                                                 var nearSkyX = (controls.getObject().position.x > (skyBox.position.x + 200)|| controls.getObject().position.x < (skyBox.position.x - 200));
                                                 var nearSkyZ = (controls.getObject().position.z > (skyBox.position.z + 200)|| controls.getObject().position.z < (skyBox.position.z - 200));
                                                 
