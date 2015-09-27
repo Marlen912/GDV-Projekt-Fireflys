@@ -340,21 +340,35 @@
  
  
  
-                                 //object sphere      
-                                 geometry = new THREE.SphereGeometry( 10, 20, 10 );
-                                 material = new THREE.MeshBasicMaterial({color:0xFF00FF});
-                                 sphere = new THREE.Mesh(geometry,material);
+                                 //object sphere      'ohniste4UVcomplet1.png',
+                                geometry = new THREE.SphereGeometry( 10, 20, 10 );
+                                material = new THREE.MeshBasicMaterial({color:0xFF00FF});
+                                sphere = new THREE.Mesh(geometry,material);
+                                
                                  sphere.position.x = 20;
                                  sphere.position.z = 0;
                                  sphere.position.y = 5;
                                  scene.add(sphere);
                                  
+                                 var arrayFire=[];
+                                 var textureFire = new THREE.ImageUtils.loadTexture('ohniste4UVcomplet1.png');
+                                 var materialFire = new THREE.MeshBasicMaterial({ map:textureFire, side:THREE.DoubleSide});
+                                  arrayFire.push(materialFire);
                                  
+                                 var loader = new THREE.AssimpJSONLoader();
+                                loader.load( 'fireplace.json', function ( sphere ) {
+                                    var MaterialFire = new THREE.MeshFaceMaterial( arrayFire );
+                                    sphere.scale.set(2,2,2);
+                                    sphere.rotation.x = ( - Math.PI / 2 ) ;
+                                    
+                                    
+                                    scene.add(sphere);
+                                });
                                  
                                  //object Tree
                                  
                                 
-                         var onProgress = function ( xhr ) {
+                        var onProgress = function ( xhr ) {
                             if ( xhr.lengthComputable ) {
 				var percentComplete = xhr.loaded / xhr.total * 100;
 				console.log( Math.round(percentComplete, 2) + '% downloaded' );
