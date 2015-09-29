@@ -529,20 +529,21 @@
                                 
                                  sound1 = new THREE.Audio (listener);
                                  sound1.load("Grillen.ogg");
-                                 sound1.autoplay = true;
                                  sound1.loop = true;
-                                 scene.add(sound1);
+                                 sound1.autoplay = true;
+                                 
+                                 camera.add(sound1);
                                  //loop fehlt
-                                
+                             
                                  sound2 = new THREE.Audio (listener);
                                  sound2.load("Eule2.ogg");
                                  sound2.autoplay = false;
-                                 scene.add(sound2);
+                                 camera.add(sound2);
                                 
                                  sound3 = new THREE.Audio (listener);
                                  sound3.load("Lagerfeuer.ogg");
                                  sound3.autoplay = true;
-                               // lauter und loop
+                               // und loop
                                  sphere.add(sound3);
 				
                                 renderer = new THREE.WebGLRenderer();
