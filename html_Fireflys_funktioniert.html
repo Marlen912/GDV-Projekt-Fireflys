@@ -44,7 +44,7 @@
             var meshClone;
             var raycaster;
             var skyBox;
-            //var material_sphere1, material_sphere2;
+            
             var sound1, sound2, sound3;
 
             // Check pointerLock
@@ -395,8 +395,8 @@
 */
 
                 //skybox
-                var position = ["starfield_back.jpg", "starfield_top.jpg", "starfield_back.jpg",
-                                "starfield_left.jpg", "starfield_top.jpg", "starfield_top.jpg"];
+                var position = ["starfield_right.jpg", "starfield_front.jpg", "starfield_front.jpg",
+                                "starfield_left.jpg", "starfield_left.jpg", "purplenebula_top.jpg"];
                 var skyArray = [];
                 var skytexture;
                 var skymaterial;
@@ -448,23 +448,22 @@
                 console.log("Water initialized");
 
                 //audio
-              /*  sound1 = new THREE.Audio(listener);
+                sound1 = new THREE.Audio(listener);
                 sound1.load("Grillen.ogg");
                 sound1.autoplay = true;
                 sound1.loop = true;
-                scene.add(sound1);
+                camera.add(sound1);
                 //loop fehlt
 
                 sound2 = new THREE.Audio(listener);
                 sound2.load("Eule2.ogg");
                 sound2.autoplay = false;
-                scene.add(sound2);
+                camera.add(sound2);
 
                 sound3 = new THREE.Audio(listener);
                 sound3.load("Lagerfeuer.ogg");
                 sound3.autoplay = true;
-                // lauter und loop
-                sphere.add(sound3);*/
+                sphere.add(sound3);
                 
                 console.log("Sound initialized");
 
@@ -549,8 +548,7 @@
 
                 skyBox.rotation.x += 0.0003;
                 moon.rotation.x += 0.0009;
-                //  frontMirror.renderWithMirror(backMirror);
-                //   backMirror.renderWithMirror(frontMirror);
+                
 
                 water.material.uniforms.time.value += 1.0 / 60.0;
                 water.render();
