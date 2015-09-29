@@ -432,18 +432,19 @@
                     alpha: 1.0,
                     moonDirection: directionalLight.position.clone().normalize(),
                     moonColor: 0xffffff,
-                    waterColor: 0x001e0f,
+                    waterColor: 0x458B74,
                     distortionScale: 50.0
                 });
 
                 mirrorMesh = new THREE.Mesh(
-                        new THREE.PlaneBufferGeometry(parameters.width * 500, parameters.height * 500),
+                        new THREE.PlaneBufferGeometry( 250, 450),
                         water.material
                         );
 
                 mirrorMesh.add(water);
                 mirrorMesh.rotation.x = -Math.PI * 0.5;
                 mirrorMesh.position.y = 5;
+                mirrorMesh.position.x = 180;
                 scene.add(mirrorMesh);
                 console.log("Water initialized");
 
