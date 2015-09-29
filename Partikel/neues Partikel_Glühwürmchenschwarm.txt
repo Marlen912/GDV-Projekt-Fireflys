@@ -1,17 +1,17 @@
 
 
-//Initializing canvas
+//canvas initialising
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 
 //Canvas dimensions
 var W = 500; var H = 500;
 
-//Lets create -> array of particles
+//array of particles
 var particles = [];
 for(var i = 0; i < 50; i++)
 {
-	//This will add 50 particles to the array with random positions
+	//add 50 particles to the array with random positions
 	particles.push(new create_particle());
 }
 
