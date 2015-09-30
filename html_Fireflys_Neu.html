@@ -45,7 +45,7 @@
             var changeColor;
             var objects = [];
             var sphere;
-            var meshClone;
+            var owlTree;
             var raycaster;
             var skyBox;
             var moon;
@@ -172,104 +172,11 @@
                 initSphere();
                 
                 // Initialize trees
-/*
-                //object Tree
-                var onProgress = function (xhr) {
-                    if (xhr.lengthComputable) {
-                        var percentComplete = xhr.loaded / xhr.total * 100;
-                        console.log(Math.round(percentComplete, 2) + '% downloaded');
-                    }
-                };
-
-                var onError = function (xhr) {
-                };
-
-                var texture = ['bark_loo.jpg', 'blatt1.jpg', 'blatt1_a.jpg'];
-                var Array = [];
-                for (var i = 0; i < texture.length; i++) {
-                    var Texture = new THREE.ImageUtils.loadTexture(texture[i]);
-                    var material = new THREE.MeshBasicMaterial({map: Texture, side: THREE.BackSide});
-                    Array.push(material);
-                }
-
-                for (var i = 0; i < 10; i++){
-                    var loader1 = new THREE.AssimpJSONLoader();
-                    loader1.load('Tree1.json', function (object) {
-                        object.scale.set(20, 20, 13);
-                        object.rotation.x = (-Math.PI / 2);
-                        var Material = new THREE.MeshFaceMaterial(Array);
-                        object.material = Material;
-                        object.position.x = Math.floor(Math.random() * 20 - 10) * 20;
-                        object.position.z = Math.floor(Math.random() * 20 - 10) * 20;
-                        scene.add(object);
-                    }, onProgress, onError);
-                }
-
-                // Objects Trees Dummy
-                geometry = new THREE.BoxGeometry(10, 50, 10);
-
-                for (var i = 0, l = geometry.faces.length; i < l; i++) {
-                    var face = geometry.faces[ i ];
-                    face.vertexColors[ 0 ] = new THREE.Color(0x8F4A1F);
-                    face.vertexColors[ 1 ] = new THREE.Color(0xB85314);
-                    face.vertexColors[ 2 ] = new THREE.Color(0xEC7429);
-                }
-
-                material = new THREE.MeshPhongMaterial({specular: 0xffffff, shading: THREE.FlatShading, vertexColors: THREE.VertexColors});
-                var mesh = new THREE.Mesh(geometry, material);
-                mesh.position.set(50, 25, 60);
-                var Color = function () {
-                    this.changeTrue = function () {
-                        for (var i = 0; i < objects.length; i++)
-                            this.dispatchEvent({type: 'change', message: sound2.play()});
-                    };
-                    this.changeFalse = function () {
-                        this.dispatchEvent({type: 'change', message: colorStatus = true});
-                    };
-                };
-
-                EventDispatcher.prototype.apply(Color.prototype);
-                // Using events
-                var color = new Color();
-                changeColor = function (event) {
-                    switch (event.keyCode)
-                    {
-                        case 69:
-                            if (colorStatus === true)
-                            {
-                                color.changeTrue();
-                                colorStatus = false;
-                                break;
-                            }
-                            else
-                            {
-                                color.changeFalse();
-                                colorStatus = true;
-                                break;
-                            }
-                    }
-                };
-
-                mesh.add(Color);
-                mesh.add(color);
-                mesh.add(changeColor);
-                document.addEventListener('keydown', changeColor);
-
-                for (var i = 0; i < 1; i++) {
-                    meshClone = mesh.clone();
-                    meshClone.position.x = Math.floor(Math.random() * 20 - 10) * 20;
-                    meshClone.position.z = Math.floor(Math.random() * 20 - 10) * 20;
-                    if ((meshClone.position.x < (sphere.position.x + 10) && meshClone.position.x > (sphere.position.x - 10)) || (meshClone.position.z < (sphere.position.x + 10) && meshClone.position.z > (sphere.position.x - 10)))
-                    {
-                        meshClone.position.x = Math.floor(Math.random() * 20 - 10) * 20;
-                        meshClone.position.z = Math.floor(Math.random() * 20 - 10) * 20;
-                    }
-                    meshClone.position.y = 25;
-                    scene.add(meshClone);
-                    objects.push(meshClone);
-                }
-                console.log("Trees initialized");
-*/
+                initTrees();
+                
+                //Initialize Tree Owl
+                initTreeOwl();
+                
                 // Initialize skybox
                 initSkyBox();
 
@@ -296,7 +203,7 @@
                 sound2 = new THREE.Audio(listener);
                 sound2.load("Eule2.ogg");
                 sound2.autoplay = false;
-                camera.add(sound2);
+                owlTree.add(sound2);
 
                 sound3 = new THREE.Audio(listener);
                 sound3.load("Lagerfeuer.ogg");
@@ -320,6 +227,9 @@
                 
                 // update controls
                 updateControls();
+                
+                //update position
+                updatePosition();
                 
                 // update skybox rotation
                 skyBox.rotation.x += 0.0003;
@@ -482,7 +392,15 @@
                     var vertex = geometryFloor.vertices[ i ];
                     vertex.x += Math.random() * 20 - 10;
                     vertex.z += Math.random() * 20 - 10;
-                    vertex.y += Math.random() * 20 - 10;
+                    if (i<144)
+                                        {
+                                        vertex.y = -90;
+
+                                        }
+                                        else
+                                        {
+                                         vertex.y += Math.random()*20 -10;
+                                        }
                 }
 
                 geometryFloor.faceVertexUvs[0] = [];
@@ -518,6 +436,73 @@
                 sphere.scale.z = 0.2;
                 scene.add(sphere);
                 console.log("Sphere initialized");
+            }
+            
+            //setup Trees
+            function initTrees(){
+                                                                       
+
+                        for(var i=0;i<70;i++)
+                        {
+			var loader1 = new THREE.AssimpJSONLoader();
+			loader1.load( 'lowpolytree.json', function ( object ) {
+
+				object.scale.set( 20,20,20 );
+                                object.rotation.x = ( - Math.PI / 2 ) ;
+                                object.position.x = Math.floor( Math.random() * 20 - 10 ) * 20;
+                                object.position.z = Math.floor( Math.random() * 20 - 10 ) * 20;
+                                if((object.position.x < (sphere.position.x+10)&& object.position.x >(sphere.position.x-10))||(object.position.z < (sphere.position.z+10)&& object.position.z >(sphere.position.z-10)))
+                                        {
+                                        object.position.x = Math.floor( Math.random() * 20 - 10 ) * 20;
+                                        object.position.z = Math.floor( Math.random() * 20 - 10 ) * 20; 
+                                        }
+                                object.position.y = 35;
+                                
+				scene.add( object );
+                                objects.push(object);
+                                console.log("Trees initialized");
+			});
+                    }        
+                
+            }
+            
+            //setup Tree with Owl
+            function initTreeOwl(){
+                                var geometry = new THREE.BoxGeometry( 10, 50, 10 );
+                                var Texture = new THREE.ImageUtils.loadTexture('bark_loo.jpg');
+				var material = new THREE.MeshBasicMaterial({ map:Texture, side:THREE.DoubleSide});
+                                owlTree = new THREE.Mesh( geometry, material );
+                                owlTree.position.set(50,25,60);
+                                
+                                
+                                         var Owl = function (){
+                                         this.call =function(){ 
+                                         this.dispatchEvent({type:'call',message: sound2.play() });};};
+                                 
+                                         EventDispatcher.prototype.apply( Owl.prototype );
+                                        // Using events
+                                        
+                                        var owl = new Owl();
+                                        
+                                        callOwl = function(event){
+                                        switch(event.keyCode)
+                                         {
+                                             case 69: //E
+                                             owl.call();
+                                             break;
+                                                                                         
+                                         }
+                                          };               
+                                        
+                                        
+					owlTree.add(Owl);
+                                        owlTree.add(owl);
+                                        owlTree.add(callOwl);
+                                        document.addEventListener('keydown',callOwl);     
+                                        scene.add(owlTree);
+                                        objects.push(owlTree);
+                                        console.log("Tree with Owl initialized");
+                
             }
             
             // setup skybox
@@ -571,14 +556,15 @@
                 });
 
                 mirrorMesh = new THREE.Mesh(
-                        new THREE.PlaneBufferGeometry(300, 450),
+                        new THREE.PlaneBufferGeometry(1200,500),
                         water.material
                         );
 
                 mirrorMesh.add(water);
                 mirrorMesh.rotation.x = -Math.PI * 0.5;
-                mirrorMesh.position.y = 5;
-                mirrorMesh.position.x = 180;
+                mirrorMesh.position.y = -5;
+                mirrorMesh.position.x = 0;
+                mirrorMesh.position.z = -500;
                 scene.add(mirrorMesh);
                 console.log("Water initialized");
             }
@@ -725,6 +711,20 @@
                    // }
                     prevTime = time;
                 }
+            }
+            
+            //update Position
+            function updatePosition(){
+                    var char = controls.getObject();
+                    xAchse = Math.round(char.position.x);
+                    yAchse = Math.round(char.position.y);
+                    zAchse = Math.round(char.position.z);
+                    OXAchse = Math.round(objects[objects.length - 1].position.x);
+                    OZAchse = Math.round(objects[objects.length - 1].position.z);
+                    str = "Current Position: x:" + xAchse + " y:" + yAchse + " z:" + zAchse + " Object: x:" + OXAchse + " z:" + OZAchse;
+                    document.getElementById("position").innerHTML = str;
+
+                 
             }
             
             // setup pointerLock

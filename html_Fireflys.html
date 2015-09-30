@@ -306,16 +306,22 @@
                                  var materialFloor = new THREE.MeshBasicMaterial({ map:textureFloor, side:THREE.DoubleSide});
                                  var geometryFloor = new THREE.PlaneGeometry( 2000, 2000, 20,20);
                                 geometryFloor.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
-        
+                                geometryLength = geometryFloor.vertices.length;
                                 for ( var i = 0, l = geometryFloor.vertices.length; i < l; i ++ ) {
 
 					var vertex = geometryFloor.vertices[ i ];
 					vertex.x += Math.random() * 20 - 10;
 					vertex.z += Math.random() * 20 - 10;
-                                        vertex.y += Math.random()*20 -10;
+                                        if (i<144)
+                                        {
+                                        vertex.y = -90;
 
                                         }
-        
+                                        else
+                                        {
+                                         vertex.y += Math.random()*20 -10;
+                                        }
+                                }
                                 geometryFloor.faceVertexUvs[0] = [];
                                 for(var i = 0; i < geometryFloor.faces.length; i++){      
                      
@@ -598,7 +604,7 @@
                                              OXAchse = Math.round(objects[objects.length-1].position.x);
                                              OZAchse = Math.round(objects[objects.length-1].position.z);
       
-                                             str = "Current Position: x:" + xAchse + " y:" + yAchse + " z:" + zAchse + " Object: x:" + OXAchse +" z:" + OZAchse;
+                                             str = "Current Position: x:" + xAchse + " y:" + yAchse + " z:" + zAchse + " Object: x:" + OXAchse +" z:" + OZAchse + "length: " + geometryLength;
                                              document.getElementById("position").innerHTML =  str;
                                              
                                              
@@ -616,7 +622,7 @@
                                                     document.removeEventListener('keydown',changeColor);
                                                 }
                                               */  
-                                             
+                                             /*
                                                 var nearSkyX = (controls.getObject().position.x > (skyBox.position.x + 200)|| controls.getObject().position.x < (skyBox.position.x - 200));
                                                 var nearSkyZ = (controls.getObject().position.z > (skyBox.position.z + 200)|| controls.getObject().position.z < (skyBox.position.z - 200));
                                                 
@@ -626,7 +632,7 @@
                                                     controls.getObject().position.z = 0;
                                                            
                                                 }
-                                              
+                                              */
                                                     //water.material.uniforms.time.value += 1.0 / 60.0;
                                                     //water.render();
                                               					prevTime = time;
