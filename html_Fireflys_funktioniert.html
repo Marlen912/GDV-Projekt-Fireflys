@@ -64,16 +64,6 @@
 
             // Water normal texture
             var waterNormals;
-            //Water properties
-            var parameters = {
-                width: 2000,
-                height: 2000,
-                widthSegments: 250,
-                heightSegments: 250,
-                depth: 1500,
-                param: 4,
-                filterparam: 1
-            };
             
             // Particle System
             var options, spawnerOptions, particleSystem;
@@ -140,7 +130,7 @@
                 directionalLight.shadowDarkness = 0.8;
                 scene.add(directionalLight);
 
-                // Shadow °° bitte die function immer so wie in zeile 179 schreiben,dann funktioiert auch alles. Jetzt kann die function mit "Bezeichner"(); aufgerufen werden. MfG Lucas
+               
                 var initShadowMapViewers = function () {
 
                     dirLightShadowMapViewer = new THREE.ShadowMapViewer(dirLight);
@@ -246,7 +236,7 @@
 
                 // floor
                 var materialarray = [];
-                var textureFloor = new THREE.ImageUtils.loadTexture("grass_ground.jpg");
+                var textureFloor = new THREE.ImageUtils.loadTexture("grass_ground2.jpg");
                 var materialFloor = new THREE.MeshBasicMaterial({map: textureFloor, side: THREE.DoubleSide});
                 var geometryFloor = new THREE.PlaneGeometry(2000, 2000, 20, 20);
                 geometryFloor.applyMatrix(new THREE.Matrix4().makeRotationX(-Math.PI / 2));
