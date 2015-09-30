@@ -190,16 +190,20 @@
                 camera.add(listener);
                 console.log("AudioListener added");
                 //audio
+                for (var i=0; i<11; i++){
                 sound1 = new THREE.Audio(listener);
                 sound1.load("Grillen.ogg");
+              
                 sound1.autoplay = true;
-                sound1.loop = true;
+            
+               // sound1.loop = true;
                 camera.add(sound1);
+            }
 
                 sound2 = new THREE.Audio(listener);
                 sound2.load("Eule2.ogg");
                 sound2.autoplay = false;
-                owlTree.add(sound2);
+                camera.add(sound2);
 
                 sound3 = new THREE.Audio(listener);
                 sound3.load("Lagerfeuer.ogg");
