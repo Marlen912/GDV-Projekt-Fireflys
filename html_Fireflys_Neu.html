@@ -156,8 +156,7 @@
                  // Initialize water
                 initWater();
                 
-                // Initialize PS1
-                initPS1();
+                
 
                 // Initialize PS2
                 initPS2();
@@ -173,6 +172,9 @@
                 
                 // Initialize trees
                 initTrees();
+                
+                // Initialize PS1
+                initPS1();
                 
                 //Initialize Tree Owl
                 initTreeOwl();
@@ -424,7 +426,7 @@
             // setup sphere
             function initSphere(){
                 geometry = new THREE.SphereGeometry(10,20,10);
-                material = new THREE.MeshBasicMaterial({color: 0xFF00FF});
+                material = new THREE.MeshBasicMaterial({color: 0xFF00FF,transparent: true,opacity: 0.0});
                 sphere = new THREE.Mesh(geometry, material);
                 sphere.position.x = 20;
                 sphere.position.z = 0;
@@ -433,6 +435,24 @@
                 sphere.scale.y = 0.2;
                 sphere.scale.z = 0.2;
                 scene.add(sphere);
+                                 var arrayFire=[];
+                                 var textureFire = new THREE.ImageUtils.loadTexture('ohniste4UVcomplet1.png');
+                                 var materialFire = new THREE.MeshBasicMaterial({ map:textureFire, side:THREE.DoubleSide});
+                                  arrayFire.push(materialFire);
+                                 
+                                 var loader = new THREE.AssimpJSONLoader();
+                                loader.load( 'fireplace.json', function ( sphere ) {
+                                    var MaterialFire = new THREE.MeshFaceMaterial( arrayFire );
+                                    sphere.material = ({map: MaterialFire});
+                                  //  sphere.scale.set(2,2,2);
+                                    sphere.position.x = 20;
+                                    sphere.position.z = 0;
+                                    sphere.position.y = 0;
+                                    sphere.rotation.x = ( - Math.PI / 2 ) ;
+                                    
+                                    
+                                    scene.add(sphere);
+                                });
                 console.log("Sphere initialized");
             }
             
@@ -532,7 +552,7 @@
                 //  var moonMaterial = new THREE.MeshLambertMaterial( { map: moonTex, side: THREE.DoubleSide } );
                 var moonMaterial = new THREE.MeshBasicMaterial({map: moonTex});
                 moon = new THREE.Mesh(new THREE.SphereGeometry(50, 50, 50), moonMaterial);
-                moon.position.set(130, 550, -500);  
+                moon.position.set(130, 500, -400);  
                 scene.add(moon);
                 console.log("Moon initialized");
             }
@@ -680,15 +700,7 @@
                         canJump = true;
                     }
 
-                    var char = controls.getObject();
-                    xAchse = Math.round(char.position.x);
-                    yAchse = Math.round(char.position.y);
-                    zAchse = Math.round(char.position.z);
-                    //OXAchse = Math.round(objects[objects.length - 1].position.x);
-                    //OZAchse = Math.round(objects[objects.length - 1].position.z);
-                    //str = "Current Position: x:" + xAchse + " y:" + yAchse + " z:" + zAchse + " Object: x:" + OXAchse + " z:" + OZAchse;
-                    // document.getElementById("position").innerHTML = str;
-
+                   
                     /*   
                      var nearSphereX = (controls.getObject().position.x < (sphere.position.x+ 50)) && (controls.getObject().position.x > (sphere.position.x- 50));
                      var nearSphereZ = (controls.getObject().position.z < (sphere.position.z+ 50)) && (controls.getObject().position.z > (sphere.position.z- 50));
