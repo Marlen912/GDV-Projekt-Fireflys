@@ -531,8 +531,8 @@
                 var moonTex = THREE.ImageUtils.loadTexture('moon_global.jpg');
                 //  var moonMaterial = new THREE.MeshLambertMaterial( { map: moonTex, side: THREE.DoubleSide } );
                 var moonMaterial = new THREE.MeshBasicMaterial({map: moonTex});
-                moon = new THREE.Mesh(new THREE.SphereGeometry(75, 75, 75), moonMaterial);
-                moon.position.set(300, 600, 250);
+                moon = new THREE.Mesh(new THREE.SphereGeometry(50, 50, 50), moonMaterial);
+                moon.position.set(130, 600, -500);
                 scene.add(moon);
                 console.log("Moon initialized");
             }
