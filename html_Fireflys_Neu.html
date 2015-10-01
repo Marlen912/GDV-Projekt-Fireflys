@@ -531,8 +531,9 @@
                 var moonTex = THREE.ImageUtils.loadTexture('moon_global.jpg');
                 //  var moonMaterial = new THREE.MeshLambertMaterial( { map: moonTex, side: THREE.DoubleSide } );
                 var moonMaterial = new THREE.MeshBasicMaterial({map: moonTex});
-moon = new THREE.Mesh(new THREE.SphereGeometry(50, 50, 50), moonMaterial);
-                moon.position.set(130, 550, -500);moon.position.set(130, 550, -500);                scene.add(moon);
+                moon = new THREE.Mesh(new THREE.SphereGeometry(50, 50, 50), moonMaterial);
+                moon.position.set(130, 550, -500);  
+                scene.add(moon);
                 console.log("Moon initialized");
             }
             
@@ -560,7 +561,7 @@ moon = new THREE.Mesh(new THREE.SphereGeometry(50, 50, 50), moonMaterial);
                 mirrorMesh.add(water);
                 mirrorMesh.rotation.x = -Math.PI * 0.5;
                 
-                mirrorMesh.position.y = -8;
+                mirrorMesh.position.y = -10;
                 mirrorMesh.position.x = 0;
                 mirrorMesh.position.z = -500;
                 scene.add(mirrorMesh);
