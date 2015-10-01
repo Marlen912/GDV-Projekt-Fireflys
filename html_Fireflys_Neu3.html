@@ -494,7 +494,7 @@
                         
                     // Init collision cube for each tree
                     var wallGeometry = new THREE.CubeGeometry(5, 100, 5, 1, 1, 1);  // 100 -> 50 
-                    var wallMaterial = new THREE.MeshBasicMaterial({color: 0x8888ff});
+                    var wallMaterial = new THREE.MeshBasicMaterial({color: 0x00fb18});
                     var wireMaterial = new THREE.MeshBasicMaterial({color: 0x000000, wireframe: true});
 
                     var wall = new THREE.Mesh(wallGeometry, wallMaterial);
@@ -642,7 +642,7 @@
 
                 onKeyDown = function (event) {
                     switch (event.keyCode) {
-                        case 38:
+                        case 69:
                             spawnParticlesPS1 = true;
                             break;                         // up
                         case 87:
@@ -673,7 +673,7 @@
 
                 onKeyUp = function (event) {
                     switch (event.keyCode) {
-                        case 38:
+                        case 69:
                             spawnParticlesPS1  = false;
                             break;                         // up
                         case 87:
@@ -865,7 +865,7 @@
 
             function initColisionnScene() {
                 var cubeGeometry = new THREE.CubeGeometry(75, 75, 75, 1, 1, 1);
-                var wireMaterial = new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true});
+                var wireMaterial = new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: false});
                 MovingCube = new THREE.Mesh(cubeGeometry, wireMaterial);
                 MovingCube.position.set(0, 25, 0);
                 scene.add(MovingCube);
