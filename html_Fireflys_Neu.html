@@ -468,7 +468,7 @@
             function initTreeOwl(){
                                 var geometry = new THREE.BoxGeometry( 10, 50, 10 );
                                 var Texture = new THREE.ImageUtils.loadTexture('bark_loo.jpg');
-				var material = new THREE.MeshBasicMaterial({ map:Texture, side:THREE.DoubleSide});
+				var material = new THREE.MeshBasicMaterial({ map:Texture, side:THREE.DoubleSide,transparent: true,opacity: 0.0});
                                 owlTree = new THREE.Mesh( geometry, material );
                                 owlTree.position.set(50,25,60);
                                 
@@ -531,8 +531,8 @@
                 var moonTex = THREE.ImageUtils.loadTexture('moon_global.jpg');
                 //  var moonMaterial = new THREE.MeshLambertMaterial( { map: moonTex, side: THREE.DoubleSide } );
                 var moonMaterial = new THREE.MeshBasicMaterial({map: moonTex});
-                moon = new THREE.Mesh(new THREE.SphereGeometry(75, 75, 75), moonMaterial);
-                moon.position.set(300, 600, 250);
+                moon = new THREE.Mesh(new THREE.SphereGeometry(60, 60, 60), moonMaterial);
+                moon.position.set(300, 550, 250);
                 scene.add(moon);
                 console.log("Moon initialized");
             }
@@ -560,7 +560,7 @@
 
                 mirrorMesh.add(water);
                 mirrorMesh.rotation.x = -Math.PI * 0.5;
-                mirrorMesh.position.y = -5;
+                mirrorMesh.position.y = -8;
                 mirrorMesh.position.x = 0;
                 mirrorMesh.position.z = -500;
                 scene.add(mirrorMesh);
