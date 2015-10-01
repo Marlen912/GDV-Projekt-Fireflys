@@ -193,10 +193,8 @@
                 for (var i=0; i<11; i++){
                 sound1 = new THREE.Audio(listener);
                 sound1.load("Grillen.ogg");
-              
                 sound1.autoplay = true;
-            
-               // sound1.loop = true;
+                sound1.setLoop(true);
                 camera.add(sound1);
             }
 
@@ -208,6 +206,7 @@
                 sound3 = new THREE.Audio(listener);
                 sound3.load("Lagerfeuer.ogg");
                 sound3.autoplay = true;
+                sound3.setLoop(true);
                 sphere.add(sound3);
                 
                 console.log("Sound initialized");
