@@ -72,7 +72,7 @@
             var waterNormals, water;
             
             // http://threejs.org/examples/#webgl_gpu_particle_system
-            // vars ParticleSystem PS1 // PS3
+            // vars ParticleSystem PS1
             var options, spawnerOptions, particleSystemCloud;
             var clock = new THREE.Clock(true);
             var tick = 0;
@@ -116,7 +116,7 @@
                 // directionlLight -> Richtung Mondlicht °°°  
                 directionalLight = new THREE.DirectionalLight(0xffffff, 0.7);
                 // Moon position 300, 600, 250
-                directionalLight.position.set(300, 600, 250);//(20, 500, 50);
+                directionalLight.position.set(130, 500, -350);//(20, 500, 50);
                 directionalLight.castShadow = true;
                 directionalLight.shadowMapWidth = 1024;
                 directionalLight.shadowMapHeight = 1024;
@@ -324,7 +324,7 @@
                 
                 // options passed during each spawned
                 options = {
-                  position: new THREE.Vector3(0, 20, 0), //y=50
+                  position: new THREE.Vector3(0, 15, 0), //y=50 //y=20
                   positionRandomness: -7.3,
                   velocity: new THREE.Vector3(0, 0, 0),
                   velocityRandomness: 7.5,
@@ -371,7 +371,7 @@
             // setup properties for PS2
             function initPS2(){
                 // Vars / Parameters ParticleSystem PS2
-                 particleCount = 1800;
+                 particleCount = 800;
                  particles = new THREE.Geometry();
                  pMaterial = new THREE.PointsMaterial({
                         color: 0xFFFFFF,  // Math.random() * 0xffffff,
@@ -441,7 +441,7 @@
                 
                 // options passed during each spawned
                 options1 = {
-                  position: new THREE.Vector3(0, 20, 0), //y=50
+                  position: new THREE.Vector3(0, 20, 0), //y=50 // (20, 0, 0)
                   positionRandomness: -7.3,
                   velocity: new THREE.Vector3(0, 0, 0),
                   velocityRandomness: 7.5,
