@@ -30,8 +30,8 @@
         <script src="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/js/WaterShader.js"></script>
         <script src="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/js/GPUParticleSystem.js"></script>
         
-        <div id="position"><span >Current Position: </span></div>  
-        <div id="instructions"><span> W, A, S, D = Move, SPACE = Jump, MOUSE = Look around,E = Activate </span></div>	
+        <div id="position"><span >Bitte erst auf den Bildschirm klicken!</span></div>  
+        <div id="instructions"><span> W, A, S, D = Move, SPACE = Jump, MOUSE = Look around,E = Activate Owl and Fireflies </span></div>	
 
         <script>
             /* global THREE */
@@ -257,9 +257,11 @@
                 // Collision
                 updateCollisions();
 
+        /*
                 //update position
                 updatePosition();
-
+        */
+       
                 // update skybox rotation
                 skyBox.rotation.x += 0.0006;
 
@@ -279,7 +281,7 @@
                 updateWater();
 
                 
-                //Deer -> texturiert..
+                //Deer
                 //color muss auf braun gestzt werden, sonst funktionierts net ganz..
                 var t = performance.now() * 0.001;
                     //mesh.rotation.y += 0.01;
@@ -855,7 +857,7 @@
                 }
             }
 
-            
+        /*    
              //update Position
             function updatePosition() {
                 var char = controls.getObject();
@@ -866,7 +868,8 @@
                 OZAchse = Math.round(objects[objects.length - 1].position.z);
                 str = "Current Position: x:" + xAchse + " y:" + yAchse + " z:" + zAchse + " Object: x:" + OXAchse + " z:" + OZAchse;
                 document.getElementById("position").innerHTML = str;
-            }
+            }   
+        */
             
             // setup pointerLock
             function checkPointerLock(havePointerLock) {
@@ -914,7 +917,6 @@
             
             
           // .oj-loader ist für alle Dateien da (nicht nur .json-Dateien!)
-            //
             function initCubeOBJ() {
   
                 // instantiate a loadingManager
