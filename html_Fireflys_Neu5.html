@@ -72,7 +72,7 @@
             var waterNormals, water;
             
             // http://threejs.org/examples/#webgl_gpu_particle_system
-            // vars ParticleSystem PS1 // PS3
+            // vars ParticleSystem PS1
             var options, spawnerOptions, particleSystemCloud;
             var clock = new THREE.Clock(true);
             var tick = 0;
@@ -116,8 +116,8 @@
                 // directionlLight -> Richtung Mondlicht °°°  
                 directionalLight = new THREE.DirectionalLight(0xffffff, 0.7);
                 // Moon position 300, 600, 250
-                directionalLight.position.set(130  , 500, -350);//(20, 500, 50);
-                directionalLight.castShadow = true;
+                
+				directionalLight.position.set(130, 500, -350);//(20, 500, 50);                directionalLight.castShadow = true;
                 directionalLight.shadowMapWidth = 1024;
                 directionalLight.shadowMapHeight = 1024;
                 directionalLight.shadowCameraNear = 0.5;
@@ -318,6 +318,7 @@
                 // system for your whole scene
                 // Paramets PS1
                 particleSystemCloud = new THREE.GPUParticleSystem({
+                  
                   maxParticles: 2000
                 
                 });
@@ -326,9 +327,11 @@
                 
                 // options passed during each spawned
                 options = {
-                  position: new THREE.Vector3(0, 20, 0), //y=50
+                  position: new THREE.Vector3(0, 15, 0), //y=50 //y=20
+                 
                   positionRandomness: -2.3,
                   velocity: new THREE.Vector3(0, 0, 0),
+                  
                   velocityRandomness: 2.5,
                   color: 0xfa88cc,//0xaa88ff,
                   colorRandomness: 1, //.2,
@@ -339,6 +342,7 @@
                 };
 
                 spawnerOptions = {
+                 
                   spawnRate: 2000,
                   horizontalSpeed: 0, //1.5,
                   verticalSpeed: 0, //1.33,
@@ -373,6 +377,7 @@
             // setup properties for PS2
             function initPS2(){
                 // Vars / Parameters ParticleSystem PS2
+                 
                  particleCount = 800;
                  particles = new THREE.Geometry();
                  pMaterial = new THREE.PointsMaterial({
@@ -437,6 +442,7 @@
             
             function initPS3(){
                 particleSystemCloud1 = new THREE.GPUParticleSystem({
+                  
                   maxParticles: 0
                 });
                 particleSystemCloud1.position.set(0,0,0);
@@ -444,7 +450,11 @@
                 
                 // options passed during each spawned
                 options1 = {
+<<<<<<< .mine
                   position: new THREE.Vector3(0, 1, 0), //y=50
+=======
+                  position: new THREE.Vector3(0, 20, 0), //y=50 // (20, 0, 0)
+>>>>>>> .theirs
                   positionRandomness: -7.3,
                   velocity: new THREE.Vector3(0, 0, 0),
                   velocityRandomness: 7.5,
@@ -457,6 +467,7 @@
                 };
 
                 spawnerOptions1 = {
+                  
                   spawnRate: 0,
                   horizontalSpeed: 0, //1.5,
                   verticalSpeed: 0, //1.33,
@@ -991,6 +1002,7 @@
                         if(spawnParticlesPS1){
                             options.position.x = collisionResults[0].object.position.x;
                             options.position.z = collisionResults[0].object.position.z;
+                           
                             options.position.y = 20;
                         }
                     }
