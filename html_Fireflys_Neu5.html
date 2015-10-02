@@ -318,16 +318,17 @@
                 // system for your whole scene
                 // Paramets PS1
                 particleSystemCloud = new THREE.GPUParticleSystem({
-                  maxParticles: 2500
+                  maxParticles: 1500 //2500
                 });
+                particleSystemCloud.position.set(0, 20, 0); //
                 scene.add( particleSystemCloud);
                 
                 // options passed during each spawned
                 options = {
-                  position: new THREE.Vector3(0, 15, 0), //y=50 //y=20
-                  positionRandomness: -7.3,
+                  position: new THREE.Vector3(0, 20, 0), //y=50 //y=15
+                  positionRandomness: -2.3, //-7.3,
                   velocity: new THREE.Vector3(0, 0, 0),
-                  velocityRandomness: 7.5,
+                  velocityRandomness: 2.5, //7.5,
                   color: 0xfa88cc,//0xaa88ff,
                   colorRandomness: 1, //.2,
                   turbulence: 1, //.5,
@@ -988,7 +989,7 @@
                         if(spawnParticlesPS1){
                             options.position.x = collisionResults[0].object.position.x;
                             options.position.z = collisionResults[0].object.position.z;
-                            options.position.y = 100;
+                            options.position.y = 20; //100;
                         }
                     }
                 }
